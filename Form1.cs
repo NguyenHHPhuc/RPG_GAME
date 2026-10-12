@@ -1,6 +1,7 @@
 using RPG.Controls;
 using RPG.DoiTuong;
-
+using RPG.Services;
+using System.Linq;
 namespace RPG
 {
     public partial class Form1 : Form
@@ -8,6 +9,7 @@ namespace RPG
 
         GameState gameState;
         private UserControl currentControl;
+        private MapService mapService = new MapService();
         public Form1()
         {
             InitializeComponent();
@@ -129,44 +131,106 @@ namespace RPG
         }
         private void Map_MapExitRequested(object sender, EventArgs e)
         {
-            MessageBox.Show("MainForm đã nhận sự kiện chuyển Map!");
-            switch (gameState.CurrentMapId)
+            // Lấy dữ liệu Map hiện tại
+            MapData currentMap = mapService.GetMap(gameState.CurrentMapId);
+
+            if (currentMap == null)
             {
-                case "Map01":
-                    gameState.CurrentMapId = "Map02";
-
-                    gameState.Player.X = 30;
-                    gameState.Player.Y = 100;
-                    break;
-
-                case "Map02":
-                    gameState.CurrentMapId = "Map03";
-
-                    gameState.Player.X = 30;
-                    gameState.Player.Y = 250;
-                    break;
-
-                case "Map03":
-                    gameState.CurrentMapId = "Map01";
-
-                    gameState.Player.X = 30;
-                    gameState.Player.Y = 200;
-                    break;
+                MessageBox.Show("Không tìm thấy Map hiện tại.");
+                return;
             }
+
+            // Từ Start Area: vào tầng cao nhất đã mở khóa
+            if (!currentMap.IsDungeon)
+            {
+                int floor = gameState.HighestUnlockedFloor;
+
+                if (floor < 1 || floor > 5)
+                {
+                    MessageBox.Show("Không có tầng Dungeon hợp lệ.");
+                    return;
+                }
+
+                MapData nextMap = mapService.GetMap(
+                    $"DungeonFloor{floor}"
+                );
+
+                if (nextMap == null)
+                {
+                    MessageBox.Show("Không tìm thấy tầng Dungeon.");
+                    return;
+                }
+
+                gameState.CurrentDungeonFloor = floor;
+                gameState.CurrentMapId = nextMap.Id;
+
+                gameState.Player.X = nextMap.EntryX;
+                gameState.Player.Y = nextMap.EntryY;
+
+                ShowMap();
+                return;
+            }
+
+            // Đang ở Dungeon: kiểm tra còn quái không
+            bool hasRemainingEnemies = gameState.Enemies.Any(
+                enemy => enemy.MapId == currentMap.Id
+            );
+
+            if (hasRemainingEnemies)
+            {
+                MessageBox.Show( "Hãy đánh bại tất cả quái vật trước khi rời tầng." );
+                if(currentControl is MapControl map)
+                {
+                    map.ResumeMovement();
+                }
+                return;
+            }
+
+            int clearedFloor = currentMap.FloorNumber;
+
+            if (!gameState.ClearedFloors.Contains(clearedFloor))
+            {
+                gameState.ClearedFloors.Add(clearedFloor);
+            }
+
+            // Mở khóa tầng kế tiếp, tối đa tầng 5
+            if (clearedFloor < 5)
+            {
+                gameState.HighestUnlockedFloor = Math.Max(
+                    gameState.HighestUnlockedFloor,
+                    clearedFloor + 1
+                );
+            }
+
+            // Sau khi hoàn thành tầng, quay về Start Area
+            MapData startArea = mapService.GetMap("StartArea");
+
+            if (startArea == null)
+            {
+                MessageBox.Show("Không tìm thấy Start Area.");
+                return;
+            }
+
+            gameState.CurrentMapId = startArea.Id;
+
+            gameState.Player.X = startArea.EntryX;
+            gameState.Player.Y = startArea.EntryY;
 
             ShowMap();
         }
 
         private void ShowMap()
         {
+            MapData mapData = mapService.GetMap(gameState.CurrentMapId);
             // Tạo một instance của MapControl và truyền gameState vào constructor
-            MapControl map = new MapControl(gameState);
-
+            MapControl map = new MapControl(gameState, mapData);
+            
             // Đăng ký sự kiện BattleRequested từ MapControl để xử lý khi người chơi gặp kẻ thù
             map.BattleRequested += Map_BattleRequested;
             map.InventoryRequested += Map_InventoryRequested;
             map.HomeRequested += Map_HomeRequested;
             map.MapExitRequested += Map_MapExitRequested;
+            map.ShopRequested += Map_ShopRequested;
             // Hiển thị MapControl trong panelMain
             ShowControl(map);
         }
@@ -176,6 +240,7 @@ namespace RPG
             BattleControl battle = new BattleControl(gameState);
             battle.BattleWon += Battle_BattleWon;
             battle.BattleLost += Battle_BattleLost;
+            battle.GameWon += Battle_GameWon;
             // Hiển thị BattleControl trong panelMain
             ShowControl(battle);
         }
@@ -189,6 +254,10 @@ namespace RPG
             gameState = GameState.CreateNewGame();
 
             ShowMainMenu();
+        }
+        private void Battle_GameWon(object sender, EventArgs e)
+        {
+            ShowVictory();
         }
         private void ShowInventory()
         {
@@ -221,6 +290,34 @@ namespace RPG
         private void Home_BackToMainMenuClicked(object sender, EventArgs e)
         {
             ShowMainMenu();
+        }
+        private void ShowVictory()
+        {
+            VictoryControl victory = new VictoryControl();
+
+            victory.BackToMainMenuClicked += Victory_BackToMainMenuClicked;
+
+            ShowControl(victory);
+        }
+        private void Victory_BackToMainMenuClicked(object sender, EventArgs e)
+        {
+            ShowMainMenu();
+        }
+        private void Map_ShopRequested(object sender, EventArgs e)
+        {
+            ShowShop();
+        }
+        private void ShowShop()
+        {
+            ShopControl shop = new ShopControl(gameState);
+
+            shop.CloseClicked += Shop_CloseClicked;
+
+            ShowControl(shop);
+        }
+        private void Shop_CloseClicked(object sender, EventArgs e)
+        {
+            ShowMap();
         }
     }
 }

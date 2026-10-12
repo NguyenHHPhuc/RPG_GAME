@@ -45,5 +45,28 @@ namespace RPG.Services
 
             return true;
         }
+        public int UseBomb(Player player, Enemy enemy, Item item)
+        {
+            if (player == null || enemy == null || item == null)
+                return 0;
+
+            if (player.Inventory == null ||
+                item.Quantity <= 0 ||
+                item.Damage <= 0 ||
+                enemy.HP <= 0)
+            {
+                return 0;
+            }
+
+            // Sát thương Bomb gây ra thực tế không vượt quá HP còn lại
+            int actualDamage = Math.Min(enemy.HP, item.Damage);
+
+            enemy.HP -= actualDamage;
+
+            // Tiêu hao một Bomb
+            player.Inventory.RemoveItem(item);
+
+            return actualDamage;
+        }
     }
 }

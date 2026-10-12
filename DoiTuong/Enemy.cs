@@ -9,8 +9,10 @@ namespace RPG.DoiTuong
         public string Id { get; set; }
         public string MapId { get; set; }
         public string Name { get; set; }
+        public bool IsBoss { get; set; } = false;
 
         public int Level { get; set; }
+        public int GoldReward { get; set; }
 
         public int HP { get; set; }
         public int MaxHP { get; set; }
@@ -21,5 +23,6 @@ namespace RPG.DoiTuong
 
         public int X { get; set; }
         public int Y { get; set; }
+
     }
 }

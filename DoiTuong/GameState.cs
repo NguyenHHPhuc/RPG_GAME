@@ -10,27 +10,42 @@ namespace RPG.DoiTuong
         public List<Enemy> Enemies { get; set; } 
         public Enemy CurrentEnemy { get; set; }
         public string CurrentMapId { get; set; }
+        public int CurrentDungeonFloor { get; set; } = 1;
+
+        public int HighestUnlockedFloor { get; set; } = 1;
+
+        public List<int> ClearedFloors { get; set; } = new List<int>();
+
+        public bool IsGameWon { get; set; }
 
         // Phương thức tĩnh để tạo một trò chơi mới với trạng thái mặc định
         // trả về một đối tượng GameState mới với các giá trị mặc định cho Player và CurrentMapId
 
-              //static để có thể gọi phương thức mà không cần tạo một thể hiện của lớp GameState
+        //static để có thể gọi phương thức mà không cần tạo một thể hiện của lớp GameState
         public static GameState CreateNewGame()
         {
             return new GameState
             {
 
-                CurrentMapId = "Map01",
+                CurrentMapId = "StartArea",
+
+                CurrentDungeonFloor = 1,
+                HighestUnlockedFloor = 1,
+
+                ClearedFloors = new List<int>(),
+
+                IsGameWon = false,
                 Player = new Player
                 {
                     Name = "Player1",
                     Level = 1,
+                    Gold = 200,
                     HP = 100,
                     MaxHP = 100,
                     MP = 50,
                     MaxMP = 50,
-                    MinDamage = 5,
-                    MaxDamage = 15,
+                    MinDamage = 90,
+                    MaxDamage = 150,
                     Defense = 10,
                     X = 100,
                     Y = 100,
@@ -82,9 +97,10 @@ namespace RPG.DoiTuong
                     new Enemy
                         {
                             Id = "E001",
-                            MapId = "Map01",
+                            MapId = "DungeonFloor1",
                             Name = "Slime",
                             Level = 1,
+                            GoldReward = 10,
                             HP = 50,
                             MaxHP = 50,
                             MinDamage = 8,
@@ -93,13 +109,29 @@ namespace RPG.DoiTuong
                             X = 400,
                             Y = 250
                         },
+                    new Enemy
+                    {
+                        Id = "E004",
+                            MapId = "DungeonFloor1",
+                            Name = "Skeleton",
+                            Level = 1,
+                            GoldReward = 15,
+                            HP = 60,
+                            MaxHP = 60,
+                            MinDamage = 10,
+                            MaxDamage = 18,
+                            Defense = 6,
+                            X = 300,
+                            Y = 200
+                    },
 
                     new Enemy
                         {
                             Id = "E002",
-                            MapId = "Map02",
+                            MapId = "DungeonFloor2",
                             Name = "Goblin",
                             Level = 2,
+                            GoldReward = 20,
                             HP = 80,
                             MaxHP = 80,
                             MinDamage = 12,
@@ -108,13 +140,29 @@ namespace RPG.DoiTuong
                             X = 400,
                             Y = 250
                         },
+                    new Enemy
+                    {
+                        Id = "E005",
+                            MapId = "DungeonFloor2",
+                            Name = "Orc",
+                            Level = 2,
+                            GoldReward = 25,
+                            HP = 90,
+                            MaxHP = 90,
+                            MinDamage = 14,
+                            MaxDamage = 22,
+                            Defense = 9,
+                            X = 350,
+                            Y = 220
+                    },
 
                      new Enemy
                         {
                             Id = "E003",
-                            MapId = "Map03",
+                            MapId = "DungeonFloor3",
                             Name = "Bat",
                             Level = 3,
+                            GoldReward = 30,
                             HP = 100,
                             MaxHP = 100,
                             MinDamage = 15,
@@ -122,6 +170,71 @@ namespace RPG.DoiTuong
                             Defense = 10,
                             X = 400,
                             Y = 250
+                        },
+                     new Enemy
+                        {
+                            Id = "E006",
+                            MapId = "DungeonFloor4",
+                            Name = "Dark Knight",
+                            Level = 4,
+                            GoldReward = 40,
+                            HP = 150,
+                            MaxHP = 150,
+                            MinDamage = 18,
+                            MaxDamage = 28,
+                            Defense = 12,
+                            X = 300,
+                            Y = 200
+                        },
+                        new Enemy
+                        {
+                            Id = "E007",
+                            MapId = "DungeonFloor4",
+                            Name = "Demon",
+                            Level = 4,
+                            GoldReward = 45,
+                            HP = 170,
+                            MaxHP = 170,
+                            MinDamage = 20,
+                            MaxDamage = 30,
+                            Defense = 13,
+                            X = 420,
+                            Y = 300
+                        },
+
+                        // Dungeon Floor 5 - quái vật thường
+                        new Enemy
+                        {
+                            Id = "E008",
+                            MapId = "DungeonFloor5",
+                            Name = "Demon Guard",
+                            Level = 5,
+                            GoldReward = 50,
+                            HP = 200,
+                            MaxHP = 200,
+                            MinDamage = 22,
+                            MaxDamage = 32,
+                            Defense = 14,
+                            X = 300,
+                            Y = 200
+                        },
+
+                        // Dungeon Floor 5 - Boss cuối
+                        new Enemy
+                        {
+                            Id = "BOSS001",
+                            MapId = "DungeonFloor5",
+                            Name = "Dragon Lord",
+                            IsBoss = true,
+                            Level = 5,
+                            GoldReward = 300,
+                            HP = 500,
+                            MaxHP = 500,
+                            MinDamage = 25,
+                            MaxDamage = 40,
+                            Defense = 18,
+                            X = 500,
+                            Y = 300
                         }
                 },
                 CurrentEnemy = null

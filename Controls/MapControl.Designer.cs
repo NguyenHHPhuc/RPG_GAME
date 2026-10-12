@@ -32,18 +32,20 @@
             lblMapName = new Label();
             pnlPlayer = new Panel();
             gameTimer = new System.Windows.Forms.Timer(components);
-            pnlWall1 = new Panel();
-            pnlWall2 = new Panel();
             pnlEnemy1 = new Panel();
             btnInventory = new Button();
             btnHome = new Button();
             pnlMapExit = new Panel();
+            lblPlayerLevel = new Label();
+            lblPlayerEXP = new Label();
+            lblSkillPoints = new Label();
+            progressPlayerEXP = new ProgressBar();
             SuspendLayout();
             // 
             // lblMapName
             // 
             lblMapName.AutoSize = true;
-            lblMapName.Location = new Point(641, 12);
+            lblMapName.Location = new Point(12, 516);
             lblMapName.Name = "lblMapName";
             lblMapName.Size = new Size(90, 15);
             lblMapName.TabIndex = 0;
@@ -61,22 +63,6 @@
             // 
             gameTimer.Interval = 20;
             gameTimer.Tick += gameTimer_Tick;
-            // 
-            // pnlWall1
-            // 
-            pnlWall1.BackColor = SystemColors.ActiveCaptionText;
-            pnlWall1.Location = new Point(280, 280);
-            pnlWall1.Name = "pnlWall1";
-            pnlWall1.Size = new Size(200, 40);
-            pnlWall1.TabIndex = 2;
-            // 
-            // pnlWall2
-            // 
-            pnlWall2.BackColor = SystemColors.ActiveCaptionText;
-            pnlWall2.Location = new Point(280, 200);
-            pnlWall2.Name = "pnlWall2";
-            pnlWall2.Size = new Size(200, 40);
-            pnlWall2.TabIndex = 3;
             // 
             // pnlEnemy1
             // 
@@ -115,20 +101,56 @@
             pnlMapExit.Size = new Size(35, 100);
             pnlMapExit.TabIndex = 7;
             // 
+            // lblPlayerLevel
+            // 
+            lblPlayerLevel.AutoSize = true;
+            lblPlayerLevel.Location = new Point(422, 11);
+            lblPlayerLevel.Name = "lblPlayerLevel";
+            lblPlayerLevel.Size = new Size(18, 15);
+            lblPlayerLevel.TabIndex = 8;
+            lblPlayerLevel.Text = "Lv";
+            // 
+            // lblPlayerEXP
+            // 
+            lblPlayerEXP.AutoSize = true;
+            lblPlayerEXP.Location = new Point(270, 37);
+            lblPlayerEXP.Name = "lblPlayerEXP";
+            lblPlayerEXP.Size = new Size(27, 15);
+            lblPlayerEXP.TabIndex = 9;
+            lblPlayerEXP.Text = "EXP";
+            // 
+            // lblSkillPoints
+            // 
+            lblSkillPoints.AutoSize = true;
+            lblSkillPoints.Location = new Point(487, 11);
+            lblSkillPoints.Name = "lblSkillPoints";
+            lblSkillPoints.Size = new Size(59, 15);
+            lblSkillPoints.TabIndex = 10;
+            lblSkillPoints.Text = "Skill Point";
+            // 
+            // progressPlayerEXP
+            // 
+            progressPlayerEXP.Location = new Point(270, 12);
+            progressPlayerEXP.Name = "progressPlayerEXP";
+            progressPlayerEXP.Size = new Size(146, 14);
+            progressPlayerEXP.TabIndex = 11;
+            // 
             // MapControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(progressPlayerEXP);
+            Controls.Add(lblSkillPoints);
+            Controls.Add(lblPlayerEXP);
+            Controls.Add(lblPlayerLevel);
             Controls.Add(pnlMapExit);
             Controls.Add(btnHome);
             Controls.Add(btnInventory);
             Controls.Add(pnlEnemy1);
-            Controls.Add(pnlWall2);
-            Controls.Add(pnlWall1);
             Controls.Add(pnlPlayer);
             Controls.Add(lblMapName);
             Name = "MapControl";
-            Size = new Size(820, 550);
+            Size = new Size(1500, 700);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -138,11 +160,13 @@
         private Label lblMapName;
         private Panel pnlPlayer;
         private System.Windows.Forms.Timer gameTimer;
-        private Panel pnlWall1;
-        private Panel pnlWall2;
         private Panel pnlEnemy1;
         private Button btnInventory;
         private Button btnHome;
         private Panel pnlMapExit;
+        private Label lblPlayerLevel;
+        private Label lblPlayerEXP;
+        private Label lblSkillPoints;
+        private ProgressBar progressPlayerEXP;
     }
 }

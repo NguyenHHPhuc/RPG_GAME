@@ -24,9 +24,11 @@ namespace RPG.Controls
         private void LoadPlayerInfo()
         {
             lblPlayerName.Text = $"Player: {gameState.Player.Name}";
+            lblPlayerEXP.Text = $"EXP: {gameState.Player.Experience} / " +$"{gameState.Player.ExperienceToNextLevel}";
             lblPlayerLevel.Text = $"Level: {gameState.Player.Level}";
             lblPlayerHP.Text = $"HP: {gameState.Player.HP} / {gameState.Player.MaxHP}";
             lblPlayerMP.Text = $"MP: {gameState.Player.MP} / {gameState.Player.MaxMP}";
+            lblPlayerGold.Text = $"Gold: {gameState.Player.Gold}";
         }
 
         private void btnStartAdventure_Click(object sender, EventArgs e)

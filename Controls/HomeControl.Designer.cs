@@ -36,6 +36,8 @@
             btnStartAdventure = new Button();
             btnInventory = new Button();
             btnExitHome = new Button();
+            lblPlayerEXP = new Label();
+            lblPlayerGold = new Label();
             SuspendLayout();
             // 
             // lblTitle
@@ -60,7 +62,7 @@
             // lblPlayerLevel
             // 
             lblPlayerLevel.AutoSize = true;
-            lblPlayerLevel.Location = new Point(176, 180);
+            lblPlayerLevel.Location = new Point(330, 178);
             lblPlayerLevel.Name = "lblPlayerLevel";
             lblPlayerLevel.Size = new Size(19, 15);
             lblPlayerLevel.TabIndex = 2;
@@ -114,10 +116,30 @@
             btnExitHome.UseVisualStyleBackColor = true;
             btnExitHome.Click += btnExitHome_Click;
             // 
+            // lblPlayerEXP
+            // 
+            lblPlayerEXP.AutoSize = true;
+            lblPlayerEXP.Location = new Point(176, 178);
+            lblPlayerEXP.Name = "lblPlayerEXP";
+            lblPlayerEXP.Size = new Size(26, 15);
+            lblPlayerEXP.TabIndex = 8;
+            lblPlayerEXP.Text = "Exp";
+            // 
+            // lblPlayerGold
+            // 
+            lblPlayerGold.AutoSize = true;
+            lblPlayerGold.Location = new Point(237, 338);
+            lblPlayerGold.Name = "lblPlayerGold";
+            lblPlayerGold.Size = new Size(32, 15);
+            lblPlayerGold.TabIndex = 9;
+            lblPlayerGold.Text = "Gold";
+            // 
             // HomeControl
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(lblPlayerGold);
+            Controls.Add(lblPlayerEXP);
             Controls.Add(btnExitHome);
             Controls.Add(btnInventory);
             Controls.Add(btnStartAdventure);
@@ -142,5 +164,7 @@
         private Button btnStartAdventure;
         private Button btnInventory;
         private Button btnExitHome;
+        private Label lblPlayerEXP;
+        private Label lblPlayerGold;
     }
 }

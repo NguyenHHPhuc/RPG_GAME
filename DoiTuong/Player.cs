@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Collections.Generic;
+
 namespace RPG.DoiTuong
 {
     public class Player
@@ -9,7 +9,10 @@ namespace RPG.DoiTuong
         public string Name { get; set; }
 
         public int Level { get; set; }
-
+        public int Gold { get; set; } = 0;
+        public int Experience { get; set; } = 0;
+        public int ExperienceToNextLevel { get; set; } = 100;
+        public int SkillPoints { get; set; } = 0;
         public int HP { get; set; }
         public int MaxHP { get; set; }
         public int MP { get; set; }
@@ -24,5 +27,11 @@ namespace RPG.DoiTuong
         public int Y { get; set; }
         public List<Skill> Skills { get; set; } = new List<Skill>();
         public Inventory Inventory { get; set; } = new Inventory();
+
+        public Item EquippedWeapon { get; set; }
+        public int EffectiveMinDamage => MinDamage + (EquippedWeapon == null ? 0 : EquippedWeapon.MinDamageBonus);
+        public int EffectiveMaxDamage =>MaxDamage + (EquippedWeapon == null ? 0 : EquippedWeapon.MaxDamageBonus);
+        public Item EquippedArmor { get; set; }
+        public int EffectiveDefense => Defense + (EquippedArmor == null ? 0 : EquippedArmor.DefenseBonus);
     }
 }
