@@ -56,7 +56,7 @@
             pnlPlayer.BackColor = SystemColors.Highlight;
             pnlPlayer.Location = new Point(590, 132);
             pnlPlayer.Name = "pnlPlayer";
-            pnlPlayer.Size = new Size(30, 30);
+            pnlPlayer.Size = new Size(32, 32);
             pnlPlayer.TabIndex = 1;
             // 
             // gameTimer
