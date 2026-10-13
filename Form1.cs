@@ -1,5 +1,6 @@
 using RPG.Controls;
 using RPG.DoiTuong;
+using RPG.Services;
 
 namespace RPG
 {
@@ -8,6 +9,7 @@ namespace RPG
 
         GameState gameState;
         private UserControl currentControl;
+        private int activeSlotNumber = -1;
         public Form1()
         {
             InitializeComponent();
@@ -15,6 +17,7 @@ namespace RPG
 
             KeyDown += MainForm_KeyDown;
             KeyUp += MainForm_KeyUp;
+            FormClosing += (_, _) => SaveCurrentSlot();
             // Hiển thị menu chính khi Form1 được khởi tạo
             ShowMainMenu();
         }
@@ -85,13 +88,34 @@ namespace RPG
 
         public void Menu_NewGameClicked(object sender, EventArgs e)
         {
-
-            gameState = GameState.CreateNewGame();
-            ShowMap();
+            ShowSlotMenu(true);
         }
         public void Menu_LoadGameClicked(object sender, EventArgs e)
         {
-            // Load game logic here
+            ShowSlotMenu(false);
+        }
+
+        private void ShowSlotMenu(bool creatingNewGame)
+        {
+            SaveSlotControl slots = new SaveSlotControl(creatingNewGame);
+            slots.GameReady += SlotMenu_GameReady;
+            slots.BackClicked += (_, _) => ShowMainMenu();
+            ShowControl(slots);
+        }
+
+        private void SlotMenu_GameReady(object? sender, SaveSlotEventArgs e)
+        {
+            activeSlotNumber = e.SlotNumber;
+            gameState = e.State;
+            SaveCurrentSlot();
+            ShowMap();
+        }
+
+        private void SaveCurrentSlot()
+        {
+            // Khi đang đánh nhau thì chờ xong trận mới ghi trạng thái ổn định.
+            if (activeSlotNumber > 0 && gameState != null && gameState.CurrentEnemy == null)
+                SaveSlotService.SaveSlot(activeSlotNumber, gameState);
         }
         public void Menu_ExitClicked(object sender, EventArgs e)
         {
@@ -102,6 +126,7 @@ namespace RPG
             // Nếu có control hiện tại, hủy nó trước khi hiển thị control mới
             if (currentControl != null)
             {
+                SaveCurrentSlot();
                 currentControl.Dispose();
                 currentControl = null;
             }
@@ -129,7 +154,6 @@ namespace RPG
         }
         private void Map_MapExitRequested(object sender, EventArgs e)
         {
-            MessageBox.Show("MainForm đã nhận sự kiện chuyển Map!");
             switch (gameState.CurrentMapId)
             {
                 case "Map01":
@@ -167,8 +191,15 @@ namespace RPG
             map.InventoryRequested += Map_InventoryRequested;
             map.HomeRequested += Map_HomeRequested;
             map.MapExitRequested += Map_MapExitRequested;
+            map.ResetMapRequested += Map_ResetMapRequested;
             // Hiển thị MapControl trong panelMain
             ShowControl(map);
+        }
+
+        private void Map_ResetMapRequested(object? sender, EventArgs e)
+        {
+            gameState.ResetCurrentMapEnemies();
+            ShowMap();
         }
         private void ShowBattle()
         {
@@ -186,8 +217,8 @@ namespace RPG
         }
         private void Battle_BattleLost(object sender, EventArgs e)
         {
-            gameState = GameState.CreateNewGame();
-
+            // Giữ nguyên ô lưu đã được ghi an toàn trước trận thua.
+            activeSlotNumber = -1;
             ShowMainMenu();
         }
         private void ShowInventory()

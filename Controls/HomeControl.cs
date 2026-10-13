@@ -23,10 +23,10 @@ namespace RPG.Controls
 
         private void LoadPlayerInfo()
         {
-            lblPlayerName.Text = $"Player: {gameState.Player.Name}";
-            lblPlayerLevel.Text = $"Level: {gameState.Player.Level}";
-            lblPlayerHP.Text = $"HP: {gameState.Player.HP} / {gameState.Player.MaxHP}";
-            lblPlayerMP.Text = $"MP: {gameState.Player.MP} / {gameState.Player.MaxMP}";
+            lblPlayerName.Text = $"Nhân vật: {gameState.Player.Name} ({gameState.Player.ClassName})";
+            lblPlayerLevel.Text = $"Cấp: {gameState.Player.Level}";
+            lblPlayerHP.Text = $"Máu: {gameState.Player.HP} / {gameState.Player.MaxHP}";
+            lblPlayerMP.Text = $"Năng lượng: {gameState.Player.MP} / {gameState.Player.MaxMP}";
         }
 
         private void btnStartAdventure_Click(object sender, EventArgs e)

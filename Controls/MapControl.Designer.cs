@@ -30,32 +30,35 @@
         {
             components = new System.ComponentModel.Container();
             lblMapName = new Label();
-            pnlPlayer = new Panel();
+            picPlayer = new PictureBox();
             gameTimer = new System.Windows.Forms.Timer(components);
             pnlWall1 = new Panel();
             pnlWall2 = new Panel();
-            pnlEnemy1 = new Panel();
             btnInventory = new Button();
             btnHome = new Button();
+            btnResetMap = new Button();
             pnlMapExit = new Panel();
             SuspendLayout();
             // 
             // lblMapName
             // 
             lblMapName.AutoSize = true;
-            lblMapName.Location = new Point(641, 12);
+            lblMapName.Anchor = AnchorStyles.None;
+            lblMapName.Location = new Point(390, 16);
             lblMapName.Name = "lblMapName";
             lblMapName.Size = new Size(90, 15);
             lblMapName.TabIndex = 0;
             lblMapName.Text = "Home (Map 01)";
             // 
-            // pnlPlayer
+            // picPlayer
             // 
-            pnlPlayer.BackColor = SystemColors.Highlight;
-            pnlPlayer.Location = new Point(590, 132);
-            pnlPlayer.Name = "pnlPlayer";
-            pnlPlayer.Size = new Size(30, 30);
-            pnlPlayer.TabIndex = 1;
+            picPlayer.BackColor = Color.Transparent;
+            picPlayer.Location = new Point(590, 132);
+            picPlayer.Name = "picPlayer";
+            picPlayer.Size = new Size(30, 36);
+            picPlayer.SizeMode = PictureBoxSizeMode.Zoom;
+            picPlayer.TabIndex = 1;
+            picPlayer.TabStop = false;
             // 
             // gameTimer
             // 
@@ -78,14 +81,6 @@
             pnlWall2.Size = new Size(200, 40);
             pnlWall2.TabIndex = 3;
             // 
-            // pnlEnemy1
-            // 
-            pnlEnemy1.BackColor = Color.Firebrick;
-            pnlEnemy1.ForeColor = SystemColors.ControlText;
-            pnlEnemy1.Location = new Point(400, 250);
-            pnlEnemy1.Name = "pnlEnemy1";
-            pnlEnemy1.Size = new Size(30, 30);
-            pnlEnemy1.TabIndex = 4;
             // 
             // btnInventory
             // 
@@ -93,7 +88,7 @@
             btnInventory.Name = "btnInventory";
             btnInventory.Size = new Size(88, 23);
             btnInventory.TabIndex = 5;
-            btnInventory.Text = "INVENTORY";
+            btnInventory.Text = "Túi đồ";
             btnInventory.UseVisualStyleBackColor = true;
             btnInventory.Click += btnInventory_Click;
             // 
@@ -103,14 +98,22 @@
             btnHome.Name = "btnHome";
             btnHome.Size = new Size(75, 23);
             btnHome.TabIndex = 6;
-            btnHome.Text = "HOME";
+            btnHome.Text = "Về nhà";
             btnHome.UseVisualStyleBackColor = true;
             btnHome.Click += btnHome_Click;
+            // Nút tạo lại quái để có thể chơi thử bản đồ nhiều lần.
+            btnResetMap.Location = new Point(218, 12);
+            btnResetMap.Name = "btnResetMap";
+            btnResetMap.Size = new Size(100, 23);
+            btnResetMap.TabIndex = 8;
+            btnResetMap.Text = "Đặt lại map";
+            btnResetMap.UseVisualStyleBackColor = true;
+            btnResetMap.Click += btnResetMap_Click;
             // 
             // pnlMapExit
             // 
             pnlMapExit.BackColor = Color.Lime;
-            pnlMapExit.Location = new Point(732, 431);
+            pnlMapExit.Location = new Point(960, 275);
             pnlMapExit.Name = "pnlMapExit";
             pnlMapExit.Size = new Size(35, 100);
             pnlMapExit.TabIndex = 7;
@@ -121,14 +124,14 @@
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(pnlMapExit);
             Controls.Add(btnHome);
+            Controls.Add(btnResetMap);
             Controls.Add(btnInventory);
-            Controls.Add(pnlEnemy1);
             Controls.Add(pnlWall2);
             Controls.Add(pnlWall1);
-            Controls.Add(pnlPlayer);
+            Controls.Add(picPlayer);
             Controls.Add(lblMapName);
             Name = "MapControl";
-            Size = new Size(820, 550);
+            Size = new Size(1000, 650);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -136,13 +139,13 @@
         #endregion
 
         private Label lblMapName;
-        private Panel pnlPlayer;
+        private PictureBox picPlayer;
         private System.Windows.Forms.Timer gameTimer;
         private Panel pnlWall1;
         private Panel pnlWall2;
-        private Panel pnlEnemy1;
         private Button btnInventory;
         private Button btnHome;
+        private Button btnResetMap;
         private Panel pnlMapExit;
     }
 }

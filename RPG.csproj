@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -7,5 +7,12 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\Steve_Dwarf.png" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Assets\Zombie_Adult.png" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Assets\Skeleton_Left_Handed.png" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Assets\Arrow.png" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 
 </Project>

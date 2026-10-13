@@ -9,6 +9,7 @@ namespace RPG.DoiTuong
         public string Id { get; set; }
         public string MapId { get; set; }
         public string Name { get; set; }
+        public string MobType { get; set; } = "Zombie";
 
         public int Level { get; set; }
 

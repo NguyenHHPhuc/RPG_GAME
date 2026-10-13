@@ -41,17 +41,18 @@
             // lblTitle
             // 
             lblTitle.AutoSize = true;
+            lblTitle.Anchor = AnchorStyles.None;
             lblTitle.Font = new Font("Segoe UI", 22F);
-            lblTitle.Location = new Point(330, 46);
+            lblTitle.Location = new Point(448, 48);
             lblTitle.Name = "lblTitle";
             lblTitle.Size = new Size(104, 41);
             lblTitle.TabIndex = 0;
-            lblTitle.Text = "HOME";
+            lblTitle.Text = "Nhà";
             // 
             // lblPlayerName
             // 
             lblPlayerName.AutoSize = true;
-            lblPlayerName.Location = new Point(176, 133);
+            lblPlayerName.Location = new Point(200, 205);
             lblPlayerName.Name = "lblPlayerName";
             lblPlayerName.Size = new Size(71, 15);
             lblPlayerName.TabIndex = 1;
@@ -60,57 +61,60 @@
             // lblPlayerLevel
             // 
             lblPlayerLevel.AutoSize = true;
-            lblPlayerLevel.Location = new Point(176, 180);
+            lblPlayerLevel.Location = new Point(200, 255);
             lblPlayerLevel.Name = "lblPlayerLevel";
             lblPlayerLevel.Size = new Size(19, 15);
             lblPlayerLevel.TabIndex = 2;
-            lblPlayerLevel.Text = "LV";
+            lblPlayerLevel.Text = "Cấp";
             // 
             // lblPlayerHP
             // 
             lblPlayerHP.AutoSize = true;
-            lblPlayerHP.Location = new Point(176, 227);
+            lblPlayerHP.Location = new Point(200, 305);
             lblPlayerHP.Name = "lblPlayerHP";
             lblPlayerHP.Size = new Size(23, 15);
             lblPlayerHP.TabIndex = 3;
-            lblPlayerHP.Text = "HP";
+            lblPlayerHP.Text = "Máu";
             // 
             // lblPlayerMP
             // 
             lblPlayerMP.AutoSize = true;
-            lblPlayerMP.Location = new Point(176, 274);
+            lblPlayerMP.Location = new Point(200, 355);
             lblPlayerMP.Name = "lblPlayerMP";
             lblPlayerMP.Size = new Size(25, 15);
             lblPlayerMP.TabIndex = 4;
-            lblPlayerMP.Text = "MP";
+            lblPlayerMP.Text = "Năng lượng";
             // 
             // btnStartAdventure
             // 
-            btnStartAdventure.Location = new Point(489, 133);
+            btnStartAdventure.Location = new Point(580, 195);
+            btnStartAdventure.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnStartAdventure.Name = "btnStartAdventure";
-            btnStartAdventure.Size = new Size(75, 23);
+            btnStartAdventure.Size = new Size(220, 46);
             btnStartAdventure.TabIndex = 5;
-            btnStartAdventure.Text = "Resume";
+            btnStartAdventure.Text = "Tiếp tục";
             btnStartAdventure.UseVisualStyleBackColor = true;
             btnStartAdventure.Click += btnStartAdventure_Click;
             // 
             // btnInventory
             // 
-            btnInventory.Location = new Point(489, 188);
+            btnInventory.Location = new Point(580, 265);
+            btnInventory.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnInventory.Name = "btnInventory";
-            btnInventory.Size = new Size(75, 23);
+            btnInventory.Size = new Size(220, 46);
             btnInventory.TabIndex = 6;
-            btnInventory.Text = "Inventory";
+            btnInventory.Text = "Túi đồ";
             btnInventory.UseVisualStyleBackColor = true;
             btnInventory.Click += btnInventory_Click;
             // 
             // btnExitHome
             // 
-            btnExitHome.Location = new Point(489, 245);
+            btnExitHome.Location = new Point(580, 335);
+            btnExitHome.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             btnExitHome.Name = "btnExitHome";
-            btnExitHome.Size = new Size(75, 23);
+            btnExitHome.Size = new Size(220, 46);
             btnExitHome.TabIndex = 7;
-            btnExitHome.Text = "Exit";
+            btnExitHome.Text = "Quay lại";
             btnExitHome.UseVisualStyleBackColor = true;
             btnExitHome.Click += btnExitHome_Click;
             // 
@@ -127,7 +131,7 @@
             Controls.Add(lblPlayerName);
             Controls.Add(lblTitle);
             Name = "HomeControl";
-            Size = new Size(741, 416);
+            Size = new Size(1000, 650);
             ResumeLayout(false);
             PerformLayout();
         }

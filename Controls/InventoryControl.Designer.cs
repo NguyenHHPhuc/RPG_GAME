@@ -38,50 +38,56 @@
             // lblTitle
             // 
             lblTitle.AutoSize = true;
+            lblTitle.Anchor = AnchorStyles.None;
             lblTitle.Font = new Font("Segoe UI", 15F);
-            lblTitle.Location = new Point(153, 38);
+            lblTitle.Location = new Point(442, 38);
             lblTitle.Name = "lblTitle";
             lblTitle.Size = new Size(116, 28);
             lblTitle.TabIndex = 0;
-            lblTitle.Text = "INVENTORY";
+            lblTitle.Text = "Túi đồ";
             // 
             // lstItems
             // 
             lstItems.FormattingEnabled = true;
-            lstItems.Location = new Point(149, 102);
+            lstItems.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
+            lstItems.Location = new Point(180, 130);
             lstItems.Name = "lstItems";
-            lstItems.Size = new Size(120, 94);
+            lstItems.Size = new Size(280, 360);
             lstItems.TabIndex = 1;
             lstItems.SelectedIndexChanged += lstItems_SelectedIndexChanged;
             // 
             // btnUse
             // 
-            btnUse.Location = new Point(76, 332);
+            btnUse.Location = new Point(325, 560);
+            btnUse.Anchor = AnchorStyles.Bottom;
             btnUse.Name = "btnUse";
-            btnUse.Size = new Size(75, 23);
+            btnUse.Size = new Size(160, 44);
             btnUse.TabIndex = 2;
-            btnUse.Text = "USE";
+            btnUse.Text = "Dùng";
             btnUse.UseVisualStyleBackColor = true;
             btnUse.Click += btnUse_Click;
             // 
             // btnClose
             // 
-            btnClose.Location = new Point(224, 332);
+            btnClose.Location = new Point(515, 560);
+            btnClose.Anchor = AnchorStyles.Bottom;
             btnClose.Name = "btnClose";
-            btnClose.Size = new Size(75, 23);
+            btnClose.Size = new Size(160, 44);
             btnClose.TabIndex = 3;
-            btnClose.Text = "CLOSE";
+            btnClose.Text = "Đóng";
             btnClose.UseVisualStyleBackColor = true;
             btnClose.Click += btnClose_Click;
             // 
             // lblItemInfo
             // 
             lblItemInfo.AutoSize = true;
-            lblItemInfo.Location = new Point(330, 109);
+            lblItemInfo.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            lblItemInfo.AutoSize = false;
+            lblItemInfo.Location = new Point(490, 130);
             lblItemInfo.Name = "lblItemInfo";
-            lblItemInfo.Size = new Size(28, 15);
+            lblItemInfo.Size = new Size(340, 120);
             lblItemInfo.TabIndex = 4;
-            lblItemInfo.Text = "Info";
+            lblItemInfo.Text = "Chọn một vật phẩm để xem thông tin.";
             // 
             // InventoryControl
             // 
@@ -93,7 +99,7 @@
             Controls.Add(lstItems);
             Controls.Add(lblTitle);
             Name = "InventoryControl";
-            Size = new Size(511, 513);
+            Size = new Size(1000, 650);
             ResumeLayout(false);
             PerformLayout();
         }

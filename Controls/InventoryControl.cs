@@ -32,7 +32,7 @@ namespace RPG.Controls
             {
                 lstItems.Items.Add($"{item.Name} x{item.Quantity}");
             }
-            lblItemInfo.Text = "Select an item to see details.";
+            lblItemInfo.Text = "Chọn một vật phẩm để xem thông tin.";
         }
 
         private void lstItems_SelectedIndexChanged(object sender, EventArgs e)
@@ -47,16 +47,16 @@ namespace RPG.Controls
 
             lblItemInfo.Text =
                 $"{item.Name}\n" +
-                $"Quantity: {item.Quantity}\n" +
-                $"Heal HP: +{item.HealAmount}\n" +
-                $"Restore MP: +{item.ManaRestore}";
+                $"Số lượng: {item.Quantity}\n" +
+                $"Hồi máu: +{item.HealAmount}\n" +
+                $"Hồi năng lượng: +{item.ManaRestore}";
         }
 
         private void btnUse_Click(object sender, EventArgs e)
         {
             if (lstItems.SelectedIndex < 0)
             {
-                MessageBox.Show("Hãy chọn một Item.");
+                MessageBox.Show("Hãy chọn một vật phẩm.");
                 return;
             }
 
@@ -76,7 +76,7 @@ namespace RPG.Controls
 
             if (!used)
             {
-                MessageBox.Show("Không thể sử dụng Item.");
+                MessageBox.Show("Không thể sử dụng vật phẩm.");
                 return;
             }
 

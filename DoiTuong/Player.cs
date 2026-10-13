@@ -7,8 +7,11 @@ namespace RPG.DoiTuong
     public class Player
     {
         public string Name { get; set; }
+        public string ClassName { get; set; } = "Chiến binh";
 
         public int Level { get; set; }
+        public int Experience { get; set; }
+        public int MaxExperience { get; set; } = 100;
 
         public int HP { get; set; }
         public int MaxHP { get; set; }
