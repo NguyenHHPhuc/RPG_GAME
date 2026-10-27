@@ -1,0 +1,17 @@
+TICH HOP RPG - BAN CUA BAN + BATTLECONTROL / MAINMENU CUA BAN BAN
+
+File nay la ban sao da tich hop tu RPG_GAME_Phuc.zip. Ban goc khong bi thay doi.
+
+Thay doi chinh:
+- Thay giao dien MainMenuControl theo ban cua ban ban (giao dien rong, nut tieng Viet); cac event NewGameClicked, LoadGameClicked, ExitClicked giu nguyen de Form1 hien tai tiep tuc dung duoc.
+- Thay giao dien va bo may hoat anh BattleControl theo ban cua ban ban: nhan vat lao toi, sprite doi mau khi trung don, mui ten cua Skeleton, hieu ung nga/khoi, floating text, thanh HP/MP/EXP, Battle Log va nut tiep tuc.
+- Them lai giao dien chon nhieu Skill va Item cua project chinh vao BattleControl moi.
+- Giu logic BattleService/ItemService va cac model cua project chinh: ExperienceToNextLevel, GoldReward, IsBoss, equipped weapon/armor, UseBomb, EXP/Gold reward va GameWon cho Boss cuoi.
+- Anh chien dau duoc them vao Assets/ va cau hinh copy ra thu muc output khi build.
+- Xoa hai control cu (lblGameName, btnPlay) khoi Form1.Designer de chung khong de len MainMenu moi.
+- Khong nhap SaveSlotControl, SaveSlotService, Mobs, hay GameState cu cua ban ban; cac phan do khong phu hop voi luong StartArea + 5 tang Dungeon cua project chinh.
+
+Luu y kiem thu:
+- Moi truong tao file khong co dotnet SDK, nen khong the chay Build Windows Forms tai day. Can mo RPG.slnx trong Visual Studio va Build Solution tren may Windows.
+- Enemy khong phai Skeleton hien dung Zombie_Adult.png nhu co che fallback cua BattleControl goc. Co the thay bo anh rieng cho Slime, Goblin, Orc, Bat va Dragon Lord sau.
+- MainMenu LoadGameClicked van giu behavior hien tai cua project chinh (handler dang de trong); khong tu dong them save slots cua ban ban.

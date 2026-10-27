@@ -14,6 +14,17 @@ namespace RPG.Controls
 
         private GameState gameState;
         private MapData mapData;
+        // Ba khung hình hoạt ảnh đứng yên của nhân vật
+        private Bitmap[] playerIdleFrames;
+
+        // Khung hình đang hiển thị
+        private int playerIdleFrameIndex = 0;
+
+        // Bộ đếm số lần Timer chạy
+        private int idleAnimationTick = 0;
+
+        // Cứ 6 lần Timer chạy thì chuyển khung hình
+        private const int IdleFrameDelay = 6;
         private Panel shopPanel;
         // Lưu mỗi quái vật cùng Panel hiển thị tương ứng trên bản đồ
         private readonly Dictionary<Enemy, Panel> enemyPanels = new Dictionary<Enemy, Panel>();
@@ -30,7 +41,87 @@ namespace RPG.Controls
         private bool moveLeft;
         private bool moveRight;
 
+        private void LoadPlayerIdleFrames()
+        {
+            // Lấy ảnh sprite từ Resources
+            Bitmap spriteSheet =
+                global::RPG.Properties.Resources.Cat_idle_1;
 
+            // File hiện tại có 3 khung hình nằm ngang
+            int frameCount = 3;
+
+            int frameWidth = spriteSheet.Width / frameCount;
+            int frameHeight = spriteSheet.Height;
+
+            playerIdleFrames = new Bitmap[frameCount];
+
+            // Cắt từng khung hình từ ảnh gốc
+            for (int i = 0; i < frameCount; i++)
+            {
+                Rectangle frameRect = new Rectangle(
+                    i * frameWidth,
+                    0,
+                    frameWidth,
+                    frameHeight
+                );
+
+                playerIdleFrames[i] = spriteSheet.Clone(
+                    frameRect,
+                    spriteSheet.PixelFormat
+                );
+            }
+
+            // Hiển thị khung hình đầu tiên
+            playerIdleFrameIndex = 0;
+            pnlPlayer.BackgroundImage = playerIdleFrames[0];
+
+            // Giữ tỷ lệ hình ảnh khi hiển thị
+            pnlPlayer.BackgroundImageLayout = ImageLayout.Zoom;
+            pnlPlayer.BackColor = Color.Transparent;
+        }
+        private void UpdatePlayerIdleAnimation()
+        {
+            if (playerIdleFrames == null ||
+                playerIdleFrames.Length == 0)
+            {
+                return;
+            }
+
+            // Kiểm tra nhân vật có đang di chuyển không
+            bool isMoving =
+                moveUp || moveDown || moveLeft || moveRight;
+
+            if (isMoving)
+            {
+                // Khi di chuyển, tạm thời dùng frame đầu tiên
+                idleAnimationTick = 0;
+                playerIdleFrameIndex = 0;
+
+                pnlPlayer.BackgroundImage = playerIdleFrames[0];
+
+                return;
+            }
+
+            // Chỉ tăng bộ đếm khi nhân vật đứng yên
+            idleAnimationTick++;
+
+            if (idleAnimationTick >= IdleFrameDelay)
+            {
+                idleAnimationTick = 0;
+
+                // Chuyển sang khung hình tiếp theo
+                playerIdleFrameIndex++;
+
+                // Hết 3 khung hình thì quay về khung đầu
+                if (playerIdleFrameIndex >= playerIdleFrames.Length)
+                {
+                    playerIdleFrameIndex = 0;
+                }
+
+                pnlPlayer.BackgroundImage =
+                    playerIdleFrames[playerIdleFrameIndex];
+            }
+        }
         protected override void OnEnter(EventArgs e)
         {
             base.OnEnter(e);
@@ -50,6 +141,7 @@ namespace RPG.Controls
         }
         public MapControl(GameState gameState, MapData mapData)
         {
+            
             InitializeComponent();
 
             this.gameState = gameState;
@@ -60,6 +152,8 @@ namespace RPG.Controls
             LoadEnemies();
             LoadShop();
             ConfigureMap();
+
+            LoadPlayerIdleFrames();
 
             UpdatePlayerProgress();
             gameTimer.Start();
@@ -497,6 +591,7 @@ namespace RPG.Controls
                 deltaX += playerSpeed;
 
             MovePlayer(deltaX, deltaY);
+            UpdatePlayerIdleAnimation();
         }
         private bool IsCollidingWithWall(Rectangle playerRect)
         {
