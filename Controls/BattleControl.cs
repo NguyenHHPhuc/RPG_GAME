@@ -256,6 +256,7 @@ namespace RPG.Controls
                 picBattleEnemy,
                 GetEnemySpriteFileName()
             );
+            ConfigureEnemySpriteLayout();
             LoadArrow();
 
             UpdateStatsText();
@@ -265,6 +266,35 @@ namespace RPG.Controls
             AddLog($"Trận chiến bắt đầu: {player.Name} đối đầu với {enemy.Name}.");
             AddLog($"HP người chơi: {player.HP}/{player.MaxHP}; MP: {player.MP}/{player.MaxMP}.");
             AddLog($"HP quái vật: {enemy.HP}/{enemy.MaxHP}.");
+        }
+        private void ConfigureEnemySpriteLayout()
+        {
+            string enemyName = enemy.Name?.Trim().ToLowerInvariant() ?? "";
+
+            // Giữ nguyên tỷ lệ ảnh, không kéo méo sprite.
+            picBattleEnemy.SizeMode = PictureBoxSizeMode.Zoom;
+
+            // Kích thước khung ảnh ban đầu cho từng loại quái.
+            picBattleEnemy.Size = enemyName switch
+            {
+                "slime" => new Size(46, 46),
+                "skeleton" => new Size(52, 64),
+                "zombie" => new Size(54, 68),
+                "demon" => new Size(62, 72),
+                "yeti" => new Size(76, 76),
+                "boss" => new Size(88, 88),
+
+                _ => new Size(54, 64)
+            };
+
+            // Giữ đáy khung ảnh enemy ngang với đáy khung nhân vật.
+            picBattleEnemy.Top = Math.Max(
+                0,
+                picBattlePlayer.Bottom - picBattleEnemy.Height
+            );
+
+            // Căn giữa ảnh bên dưới tên enemy.
+            AlignIconsWithNames();
         }
         private void UpdateStatsText()
         {

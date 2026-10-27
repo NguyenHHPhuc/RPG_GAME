@@ -88,9 +88,9 @@
             // 
             lblPlayerName.Anchor = AnchorStyles.None;
             lblPlayerName.AutoSize = true;
-            lblPlayerName.Location = new Point(220, 17);
+            lblPlayerName.Location = new Point(251, 23);
             lblPlayerName.Name = "lblPlayerName";
-            lblPlayerName.Size = new Size(71, 15);
+            lblPlayerName.Size = new Size(89, 20);
             lblPlayerName.TabIndex = 0;
             lblPlayerName.Text = "PlayerName";
             // 
@@ -98,9 +98,9 @@
             // 
             lblEnemyName.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             lblEnemyName.AutoSize = true;
-            lblEnemyName.Location = new Point(710, 17);
+            lblEnemyName.Location = new Point(811, 23);
             lblEnemyName.Name = "lblEnemyName";
-            lblEnemyName.Size = new Size(75, 15);
+            lblEnemyName.Size = new Size(93, 20);
             lblEnemyName.TabIndex = 1;
             lblEnemyName.Text = "EnemyName";
             lblEnemyName.Click += lblEnemyName_Click;
@@ -110,17 +110,19 @@
             pnlPlayerHP.BackColor = Color.Gainsboro;
             pnlPlayerHP.BorderStyle = BorderStyle.FixedSingle;
             pnlPlayerHP.Controls.Add(pnlPlayerHPFill);
-            pnlPlayerHP.Location = new Point(80, 218);
+            pnlPlayerHP.Location = new Point(91, 291);
+            pnlPlayerHP.Margin = new Padding(3, 4, 3, 4);
             pnlPlayerHP.Name = "pnlPlayerHP";
-            pnlPlayerHP.Size = new Size(350, 24);
+            pnlPlayerHP.Size = new Size(400, 31);
             pnlPlayerHP.TabIndex = 2;
             // 
             // pnlPlayerHPFill
             // 
             pnlPlayerHPFill.BackColor = Color.FromArgb(220, 53, 69);
             pnlPlayerHPFill.Location = new Point(0, 0);
+            pnlPlayerHPFill.Margin = new Padding(3, 4, 3, 4);
             pnlPlayerHPFill.Name = "pnlPlayerHPFill";
-            pnlPlayerHPFill.Size = new Size(348, 22);
+            pnlPlayerHPFill.Size = new Size(398, 29);
             pnlPlayerHPFill.TabIndex = 0;
             // 
             // pnlEnemyHP
@@ -128,43 +130,46 @@
             pnlEnemyHP.BackColor = Color.Gainsboro;
             pnlEnemyHP.BorderStyle = BorderStyle.FixedSingle;
             pnlEnemyHP.Controls.Add(pnlEnemyHPFill);
-            pnlEnemyHP.Location = new Point(570, 218);
+            pnlEnemyHP.Location = new Point(651, 291);
+            pnlEnemyHP.Margin = new Padding(3, 4, 3, 4);
             pnlEnemyHP.Name = "pnlEnemyHP";
-            pnlEnemyHP.Size = new Size(350, 24);
+            pnlEnemyHP.Size = new Size(400, 31);
             pnlEnemyHP.TabIndex = 3;
             // 
             // pnlEnemyHPFill
             // 
             pnlEnemyHPFill.BackColor = Color.FromArgb(220, 53, 69);
             pnlEnemyHPFill.Location = new Point(0, 0);
+            pnlEnemyHPFill.Margin = new Padding(3, 4, 3, 4);
             pnlEnemyHPFill.Name = "pnlEnemyHPFill";
-            pnlEnemyHPFill.Size = new Size(348, 22);
+            pnlEnemyHPFill.Size = new Size(398, 29);
             pnlEnemyHPFill.TabIndex = 0;
             // 
             // lblPlayerHP
             // 
             lblPlayerHP.AutoSize = true;
-            lblPlayerHP.Location = new Point(80, 246);
+            lblPlayerHP.Location = new Point(91, 328);
             lblPlayerHP.Name = "lblPlayerHP";
-            lblPlayerHP.Size = new Size(31, 15);
+            lblPlayerHP.Size = new Size(38, 20);
             lblPlayerHP.TabIndex = 4;
             lblPlayerHP.Text = "Máu";
             // 
             // lblEnemyHP
             // 
             lblEnemyHP.AutoSize = true;
-            lblEnemyHP.Location = new Point(570, 246);
+            lblEnemyHP.Location = new Point(651, 328);
             lblEnemyHP.Name = "lblEnemyHP";
-            lblEnemyHP.Size = new Size(31, 15);
+            lblEnemyHP.Size = new Size(38, 20);
             lblEnemyHP.TabIndex = 5;
             lblEnemyHP.Text = "Máu";
             // 
             // btnAttack
             // 
             btnAttack.Anchor = AnchorStyles.Bottom;
-            btnAttack.Location = new Point(257, 546);
+            btnAttack.Location = new Point(294, 728);
+            btnAttack.Margin = new Padding(3, 4, 3, 4);
             btnAttack.Name = "btnAttack";
-            btnAttack.Size = new Size(150, 44);
+            btnAttack.Size = new Size(171, 59);
             btnAttack.TabIndex = 6;
             btnAttack.Text = "Đánh";
             btnAttack.UseVisualStyleBackColor = true;
@@ -173,9 +178,10 @@
             // btnSkill
             // 
             btnSkill.Anchor = AnchorStyles.Bottom;
-            btnSkill.Location = new Point(425, 546);
+            btnSkill.Location = new Point(486, 728);
+            btnSkill.Margin = new Padding(3, 4, 3, 4);
             btnSkill.Name = "btnSkill";
-            btnSkill.Size = new Size(150, 44);
+            btnSkill.Size = new Size(171, 59);
             btnSkill.TabIndex = 7;
             btnSkill.Text = "Kỹ năng";
             btnSkill.UseVisualStyleBackColor = true;
@@ -186,34 +192,37 @@
             pnlPlayerMP.BackColor = Color.Gainsboro;
             pnlPlayerMP.BorderStyle = BorderStyle.FixedSingle;
             pnlPlayerMP.Controls.Add(pnlPlayerMPFill);
-            pnlPlayerMP.Location = new Point(80, 267);
+            pnlPlayerMP.Location = new Point(91, 356);
+            pnlPlayerMP.Margin = new Padding(3, 4, 3, 4);
             pnlPlayerMP.Name = "pnlPlayerMP";
-            pnlPlayerMP.Size = new Size(350, 24);
+            pnlPlayerMP.Size = new Size(400, 31);
             pnlPlayerMP.TabIndex = 8;
             // 
             // pnlPlayerMPFill
             // 
             pnlPlayerMPFill.BackColor = Color.FromArgb(13, 110, 253);
             pnlPlayerMPFill.Location = new Point(0, 0);
+            pnlPlayerMPFill.Margin = new Padding(3, 4, 3, 4);
             pnlPlayerMPFill.Name = "pnlPlayerMPFill";
-            pnlPlayerMPFill.Size = new Size(348, 22);
+            pnlPlayerMPFill.Size = new Size(398, 29);
             pnlPlayerMPFill.TabIndex = 0;
             // 
             // lblPlayerMP
             // 
             lblPlayerMP.AutoSize = true;
-            lblPlayerMP.Location = new Point(80, 295);
+            lblPlayerMP.Location = new Point(91, 393);
             lblPlayerMP.Name = "lblPlayerMP";
-            lblPlayerMP.Size = new Size(70, 15);
+            lblPlayerMP.Size = new Size(88, 20);
             lblPlayerMP.TabIndex = 9;
             lblPlayerMP.Text = "Năng lượng";
             // 
             // btnItem
             // 
             btnItem.Anchor = AnchorStyles.Bottom;
-            btnItem.Location = new Point(593, 546);
+            btnItem.Location = new Point(678, 728);
+            btnItem.Margin = new Padding(3, 4, 3, 4);
             btnItem.Name = "btnItem";
-            btnItem.Size = new Size(150, 44);
+            btnItem.Size = new Size(171, 59);
             btnItem.TabIndex = 10;
             btnItem.Text = "Vật phẩm";
             btnItem.UseVisualStyleBackColor = true;
@@ -223,9 +232,9 @@
             // 
             lblBattleLogTitle.Anchor = AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             lblBattleLogTitle.Font = new Font("Segoe UI", 10F, FontStyle.Bold);
-            lblBattleLogTitle.Location = new Point(120, 346);
+            lblBattleLogTitle.Location = new Point(137, 461);
             lblBattleLogTitle.Name = "lblBattleLogTitle";
-            lblBattleLogTitle.Size = new Size(760, 22);
+            lblBattleLogTitle.Size = new Size(869, 29);
             lblBattleLogTitle.TabIndex = 11;
             lblBattleLogTitle.Text = "NHẬT KÝ TRẬN ĐẤU";
             // 
@@ -236,17 +245,19 @@
             lstBattleLog.FormattingEnabled = true;
             lstBattleLog.HorizontalScrollbar = true;
             lstBattleLog.IntegralHeight = false;
-            lstBattleLog.Location = new Point(120, 372);
+            lstBattleLog.Location = new Point(137, 496);
+            lstBattleLog.Margin = new Padding(3, 4, 3, 4);
             lstBattleLog.Name = "lstBattleLog";
-            lstBattleLog.Size = new Size(760, 120);
+            lstBattleLog.Size = new Size(868, 159);
             lstBattleLog.TabIndex = 12;
             // 
             // btnContinue
             // 
             btnContinue.Anchor = AnchorStyles.Bottom;
-            btnContinue.Location = new Point(425, 546);
+            btnContinue.Location = new Point(486, 728);
+            btnContinue.Margin = new Padding(3, 4, 3, 4);
             btnContinue.Name = "btnContinue";
-            btnContinue.Size = new Size(150, 44);
+            btnContinue.Size = new Size(171, 59);
             btnContinue.TabIndex = 13;
             btnContinue.Text = "Tiếp tục";
             btnContinue.UseVisualStyleBackColor = true;
@@ -260,18 +271,20 @@
             pnlEncounterScene.BorderStyle = BorderStyle.FixedSingle;
             pnlEncounterScene.Controls.Add(picBattlePlayer);
             pnlEncounterScene.Controls.Add(picBattleEnemy);
-            pnlEncounterScene.Location = new Point(50, 42);
+            pnlEncounterScene.Location = new Point(57, 56);
+            pnlEncounterScene.Margin = new Padding(3, 4, 3, 4);
             pnlEncounterScene.Name = "pnlEncounterScene";
-            pnlEncounterScene.Size = new Size(900, 120);
+            pnlEncounterScene.Size = new Size(1028, 159);
             pnlEncounterScene.TabIndex = 14;
             pnlEncounterScene.Paint += pnlEncounterScene_Paint;
             // 
             // picBattlePlayer
             // 
             picBattlePlayer.BackColor = Color.Transparent;
-            picBattlePlayer.Location = new Point(188, 40);
+            picBattlePlayer.Location = new Point(215, 53);
+            picBattlePlayer.Margin = new Padding(3, 4, 3, 4);
             picBattlePlayer.Name = "picBattlePlayer";
-            picBattlePlayer.Size = new Size(34, 60);
+            picBattlePlayer.Size = new Size(39, 80);
             picBattlePlayer.SizeMode = PictureBoxSizeMode.Zoom;
             picBattlePlayer.TabIndex = 1;
             picBattlePlayer.TabStop = false;
@@ -280,9 +293,10 @@
             // 
             picBattleEnemy.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             picBattleEnemy.BackColor = Color.Transparent;
-            picBattleEnemy.Location = new Point(1376, 34);
+            picBattleEnemy.Location = new Point(1573, 45);
+            picBattleEnemy.Margin = new Padding(3, 4, 3, 4);
             picBattleEnemy.Name = "picBattleEnemy";
-            picBattleEnemy.Size = new Size(34, 60);
+            picBattleEnemy.Size = new Size(39, 80);
             picBattleEnemy.SizeMode = PictureBoxSizeMode.Zoom;
             picBattleEnemy.TabIndex = 2;
             picBattleEnemy.TabStop = false;
@@ -293,131 +307,141 @@
             pnlPlayerXP.BackColor = Color.Gainsboro;
             pnlPlayerXP.BorderStyle = BorderStyle.FixedSingle;
             pnlPlayerXP.Controls.Add(pnlPlayerXPFill);
-            pnlPlayerXP.Location = new Point(50, 180);
+            pnlPlayerXP.Location = new Point(57, 240);
+            pnlPlayerXP.Margin = new Padding(3, 4, 3, 4);
             pnlPlayerXP.Name = "pnlPlayerXP";
-            pnlPlayerXP.Size = new Size(900, 10);
+            pnlPlayerXP.Size = new Size(1028, 13);
             pnlPlayerXP.TabIndex = 15;
             // 
             // pnlPlayerXPFill
             // 
             pnlPlayerXPFill.BackColor = Color.FromArgb(156, 39, 176);
             pnlPlayerXPFill.Location = new Point(0, 0);
+            pnlPlayerXPFill.Margin = new Padding(3, 4, 3, 4);
             pnlPlayerXPFill.Name = "pnlPlayerXPFill";
-            pnlPlayerXPFill.Size = new Size(0, 8);
+            pnlPlayerXPFill.Size = new Size(0, 11);
             pnlPlayerXPFill.TabIndex = 0;
             // 
             // lblPlayerXP
             // 
             lblPlayerXP.AutoSize = true;
-            lblPlayerXP.Location = new Point(50, 194);
+            lblPlayerXP.Location = new Point(57, 259);
             lblPlayerXP.Name = "lblPlayerXP";
-            lblPlayerXP.Size = new Size(116, 15);
+            lblPlayerXP.Size = new Size(145, 20);
             lblPlayerXP.TabIndex = 16;
             lblPlayerXP.Text = "Kinh nghiệm: 0 / 100";
-            //
+            // 
             // grpSkillSelection
-            //
+            // 
             grpSkillSelection.Anchor = AnchorStyles.None;
             grpSkillSelection.Controls.Add(lstSkills);
             grpSkillSelection.Controls.Add(lblSkillInfo);
             grpSkillSelection.Controls.Add(btnUseSelectedSkill);
             grpSkillSelection.Controls.Add(btnCancelSkill);
-            grpSkillSelection.Location = new Point(320, 235);
+            grpSkillSelection.Location = new Point(366, 313);
+            grpSkillSelection.Margin = new Padding(3, 4, 3, 4);
             grpSkillSelection.Name = "grpSkillSelection";
-            grpSkillSelection.Size = new Size(360, 280);
+            grpSkillSelection.Padding = new Padding(3, 4, 3, 4);
+            grpSkillSelection.Size = new Size(411, 373);
             grpSkillSelection.TabIndex = 17;
             grpSkillSelection.TabStop = false;
             grpSkillSelection.Text = "Chọn kỹ năng";
             grpSkillSelection.Visible = false;
-            //
+            // 
             // lstSkills
-            //
+            // 
             lstSkills.FormattingEnabled = true;
-            lstSkills.ItemHeight = 20;
-            lstSkills.Location = new Point(16, 30);
+            lstSkills.Location = new Point(18, 40);
+            lstSkills.Margin = new Padding(3, 4, 3, 4);
             lstSkills.Name = "lstSkills";
-            lstSkills.Size = new Size(145, 164);
+            lstSkills.Size = new Size(165, 204);
             lstSkills.TabIndex = 0;
-            //
+            // 
             // lblSkillInfo
-            //
-            lblSkillInfo.Location = new Point(175, 30);
+            // 
+            lblSkillInfo.Location = new Point(200, 40);
             lblSkillInfo.Name = "lblSkillInfo";
-            lblSkillInfo.Size = new Size(168, 164);
+            lblSkillInfo.Size = new Size(192, 219);
             lblSkillInfo.TabIndex = 1;
             lblSkillInfo.Text = "Chọn một kỹ năng.";
-            //
+            // 
             // btnUseSelectedSkill
-            //
-            btnUseSelectedSkill.Location = new Point(45, 220);
+            // 
+            btnUseSelectedSkill.Location = new Point(51, 293);
+            btnUseSelectedSkill.Margin = new Padding(3, 4, 3, 4);
             btnUseSelectedSkill.Name = "btnUseSelectedSkill";
-            btnUseSelectedSkill.Size = new Size(120, 35);
+            btnUseSelectedSkill.Size = new Size(137, 47);
             btnUseSelectedSkill.TabIndex = 2;
             btnUseSelectedSkill.Text = "Sử dụng";
             btnUseSelectedSkill.UseVisualStyleBackColor = true;
-            //
+            // 
             // btnCancelSkill
-            //
-            btnCancelSkill.Location = new Point(190, 220);
+            // 
+            btnCancelSkill.Location = new Point(217, 293);
+            btnCancelSkill.Margin = new Padding(3, 4, 3, 4);
             btnCancelSkill.Name = "btnCancelSkill";
-            btnCancelSkill.Size = new Size(120, 35);
+            btnCancelSkill.Size = new Size(137, 47);
             btnCancelSkill.TabIndex = 3;
             btnCancelSkill.Text = "Hủy";
             btnCancelSkill.UseVisualStyleBackColor = true;
-            //
+            // 
             // grpItemSelection
-            //
+            // 
             grpItemSelection.Anchor = AnchorStyles.None;
             grpItemSelection.Controls.Add(lstBattleItems);
             grpItemSelection.Controls.Add(lblBattleItemInfo);
             grpItemSelection.Controls.Add(btnUseSelectedItem);
             grpItemSelection.Controls.Add(btnCancelItem);
-            grpItemSelection.Location = new Point(320, 235);
+            grpItemSelection.Location = new Point(366, 313);
+            grpItemSelection.Margin = new Padding(3, 4, 3, 4);
             grpItemSelection.Name = "grpItemSelection";
-            grpItemSelection.Size = new Size(360, 280);
+            grpItemSelection.Padding = new Padding(3, 4, 3, 4);
+            grpItemSelection.Size = new Size(411, 373);
             grpItemSelection.TabIndex = 18;
             grpItemSelection.TabStop = false;
             grpItemSelection.Text = "Chọn vật phẩm";
             grpItemSelection.Visible = false;
-            //
+            // 
             // lstBattleItems
-            //
+            // 
             lstBattleItems.FormattingEnabled = true;
-            lstBattleItems.ItemHeight = 20;
-            lstBattleItems.Location = new Point(16, 30);
+            lstBattleItems.Location = new Point(18, 40);
+            lstBattleItems.Margin = new Padding(3, 4, 3, 4);
             lstBattleItems.Name = "lstBattleItems";
-            lstBattleItems.Size = new Size(145, 164);
+            lstBattleItems.Size = new Size(165, 204);
             lstBattleItems.TabIndex = 0;
-            //
+            // 
             // lblBattleItemInfo
-            //
-            lblBattleItemInfo.Location = new Point(175, 30);
+            // 
+            lblBattleItemInfo.Location = new Point(200, 40);
             lblBattleItemInfo.Name = "lblBattleItemInfo";
-            lblBattleItemInfo.Size = new Size(168, 164);
+            lblBattleItemInfo.Size = new Size(192, 219);
             lblBattleItemInfo.TabIndex = 1;
             lblBattleItemInfo.Text = "Chọn một vật phẩm.";
-            //
+            // 
             // btnUseSelectedItem
-            //
-            btnUseSelectedItem.Location = new Point(45, 220);
+            // 
+            btnUseSelectedItem.Location = new Point(51, 293);
+            btnUseSelectedItem.Margin = new Padding(3, 4, 3, 4);
             btnUseSelectedItem.Name = "btnUseSelectedItem";
-            btnUseSelectedItem.Size = new Size(120, 35);
+            btnUseSelectedItem.Size = new Size(137, 47);
             btnUseSelectedItem.TabIndex = 2;
             btnUseSelectedItem.Text = "Sử dụng";
             btnUseSelectedItem.UseVisualStyleBackColor = true;
-            //
+            // 
             // btnCancelItem
-            //
-            btnCancelItem.Location = new Point(190, 220);
+            // 
+            btnCancelItem.Location = new Point(217, 293);
+            btnCancelItem.Margin = new Padding(3, 4, 3, 4);
             btnCancelItem.Name = "btnCancelItem";
-            btnCancelItem.Size = new Size(120, 35);
+            btnCancelItem.Size = new Size(137, 47);
             btnCancelItem.TabIndex = 3;
             btnCancelItem.Text = "Hủy";
             btnCancelItem.UseVisualStyleBackColor = true;
-            //
+            // 
             // BattleControl
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(btnItem);
             Controls.Add(lblPlayerMP);
@@ -438,8 +462,9 @@
             Controls.Add(btnContinue);
             Controls.Add(grpSkillSelection);
             Controls.Add(grpItemSelection);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "BattleControl";
-            Size = new Size(1000, 650);
+            Size = new Size(1143, 867);
             pnlPlayerHP.ResumeLayout(false);
             pnlEnemyHP.ResumeLayout(false);
             pnlPlayerMP.ResumeLayout(false);

@@ -30,26 +30,28 @@
         {
             panelMain = new Panel();
             SuspendLayout();
+            // 
             // panelMain
             // 
             panelMain.Dock = DockStyle.Fill;
             panelMain.Location = new Point(0, 0);
+            panelMain.Margin = new Padding(3, 4, 3, 4);
             panelMain.Name = "panelMain";
-            panelMain.Size = new Size(1264, 681);
+            panelMain.Size = new Size(1482, 853);
             panelMain.TabIndex = 2;
             // 
             // Form1
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1264, 681);
+            ClientSize = new Size(1482, 853);
             Controls.Add(panelMain);
-            MinimumSize = new Size(1000, 650);
+            Margin = new Padding(3, 4, 3, 4);
+            MinimumSize = new Size(1140, 851);
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Form1";
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion

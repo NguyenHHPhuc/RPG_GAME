@@ -45,18 +45,19 @@
             // lblMapName
             // 
             lblMapName.AutoSize = true;
-            lblMapName.Location = new Point(12, 516);
+            lblMapName.Location = new Point(13, 819);
             lblMapName.Name = "lblMapName";
-            lblMapName.Size = new Size(90, 15);
+            lblMapName.Size = new Size(114, 20);
             lblMapName.TabIndex = 0;
             lblMapName.Text = "Home (Map 01)";
             // 
             // pnlPlayer
             // 
             pnlPlayer.BackColor = SystemColors.Highlight;
-            pnlPlayer.Location = new Point(590, 132);
+            pnlPlayer.Location = new Point(674, 176);
+            pnlPlayer.Margin = new Padding(3, 4, 3, 4);
             pnlPlayer.Name = "pnlPlayer";
-            pnlPlayer.Size = new Size(32, 32);
+            pnlPlayer.Size = new Size(37, 43);
             pnlPlayer.TabIndex = 1;
             // 
             // gameTimer
@@ -68,16 +69,18 @@
             // 
             pnlEnemy1.BackColor = Color.Firebrick;
             pnlEnemy1.ForeColor = SystemColors.ControlText;
-            pnlEnemy1.Location = new Point(400, 250);
+            pnlEnemy1.Location = new Point(457, 333);
+            pnlEnemy1.Margin = new Padding(3, 4, 3, 4);
             pnlEnemy1.Name = "pnlEnemy1";
-            pnlEnemy1.Size = new Size(30, 30);
+            pnlEnemy1.Size = new Size(34, 40);
             pnlEnemy1.TabIndex = 4;
             // 
             // btnInventory
             // 
-            btnInventory.Location = new Point(23, 12);
+            btnInventory.Location = new Point(26, 16);
+            btnInventory.Margin = new Padding(3, 4, 3, 4);
             btnInventory.Name = "btnInventory";
-            btnInventory.Size = new Size(88, 23);
+            btnInventory.Size = new Size(101, 31);
             btnInventory.TabIndex = 5;
             btnInventory.Text = "INVENTORY";
             btnInventory.UseVisualStyleBackColor = true;
@@ -85,9 +88,10 @@
             // 
             // btnHome
             // 
-            btnHome.Location = new Point(128, 12);
+            btnHome.Location = new Point(146, 16);
+            btnHome.Margin = new Padding(3, 4, 3, 4);
             btnHome.Name = "btnHome";
-            btnHome.Size = new Size(75, 23);
+            btnHome.Size = new Size(86, 31);
             btnHome.TabIndex = 6;
             btnHome.Text = "HOME";
             btnHome.UseVisualStyleBackColor = true;
@@ -96,48 +100,50 @@
             // pnlMapExit
             // 
             pnlMapExit.BackColor = Color.Lime;
-            pnlMapExit.Location = new Point(732, 431);
+            pnlMapExit.Location = new Point(837, 575);
+            pnlMapExit.Margin = new Padding(3, 4, 3, 4);
             pnlMapExit.Name = "pnlMapExit";
-            pnlMapExit.Size = new Size(35, 100);
+            pnlMapExit.Size = new Size(40, 133);
             pnlMapExit.TabIndex = 7;
             // 
             // lblPlayerLevel
             // 
             lblPlayerLevel.AutoSize = true;
-            lblPlayerLevel.Location = new Point(422, 11);
+            lblPlayerLevel.Location = new Point(482, 15);
             lblPlayerLevel.Name = "lblPlayerLevel";
-            lblPlayerLevel.Size = new Size(18, 15);
+            lblPlayerLevel.Size = new Size(22, 20);
             lblPlayerLevel.TabIndex = 8;
             lblPlayerLevel.Text = "Lv";
             // 
             // lblPlayerEXP
             // 
             lblPlayerEXP.AutoSize = true;
-            lblPlayerEXP.Location = new Point(270, 37);
+            lblPlayerEXP.Location = new Point(309, 39);
             lblPlayerEXP.Name = "lblPlayerEXP";
-            lblPlayerEXP.Size = new Size(27, 15);
+            lblPlayerEXP.Size = new Size(34, 20);
             lblPlayerEXP.TabIndex = 9;
             lblPlayerEXP.Text = "EXP";
             // 
             // lblSkillPoints
             // 
             lblSkillPoints.AutoSize = true;
-            lblSkillPoints.Location = new Point(487, 11);
+            lblSkillPoints.Location = new Point(557, 15);
             lblSkillPoints.Name = "lblSkillPoints";
-            lblSkillPoints.Size = new Size(59, 15);
+            lblSkillPoints.Size = new Size(73, 20);
             lblSkillPoints.TabIndex = 10;
             lblSkillPoints.Text = "Skill Point";
             // 
             // progressPlayerEXP
             // 
-            progressPlayerEXP.Location = new Point(270, 12);
+            progressPlayerEXP.Location = new Point(309, 16);
+            progressPlayerEXP.Margin = new Padding(3, 4, 3, 4);
             progressPlayerEXP.Name = "progressPlayerEXP";
-            progressPlayerEXP.Size = new Size(146, 14);
+            progressPlayerEXP.Size = new Size(167, 19);
             progressPlayerEXP.TabIndex = 11;
             // 
             // MapControl
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             Controls.Add(progressPlayerEXP);
             Controls.Add(lblSkillPoints);
@@ -149,8 +155,9 @@
             Controls.Add(pnlEnemy1);
             Controls.Add(pnlPlayer);
             Controls.Add(lblMapName);
+            Margin = new Padding(3, 4, 3, 4);
             Name = "MapControl";
-            Size = new Size(1500, 700);
+            Size = new Size(1714, 933);
             ResumeLayout(false);
             PerformLayout();
         }

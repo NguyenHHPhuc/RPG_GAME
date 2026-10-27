@@ -113,6 +113,7 @@ namespace RPG
             control.Dock = DockStyle.Fill;
 
             panelMain.Controls.Add(control);
+
         }
         public void Map_BattleRequested(object sender, EventArgs e)
         {
