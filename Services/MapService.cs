@@ -19,6 +19,189 @@ namespace RPG.Services
                 BackgroundColor = Color.LightBlue,
                 TextColor = Color.Black,
                 // Danh sách các chướng ngại vật trong Map.
+                Obstacles = new List<MapObstacle>
+                {
+                    new MapObstacle
+                    {
+                        Id = "StartArea_rightup01",
+                        X = 600,
+                        Y = 0,
+                        Width = 400,
+                        Height = 200,
+                        Color = Color.Gray
+                    },
+                    new MapObstacle
+                    {
+                        Id = "StartArea_rightup02",
+                        X = 700,
+                        Y = 200,
+                        Width = 330,
+                        Height = 50,
+                        Color = Color.Green
+                    },
+                    new MapObstacle
+                    {
+                        Id = "StartArea_rightup03",
+                        X = 750,
+                        Y = 250,
+                        Width = 280,
+                        Height = 50,
+                        Color = Color.Green
+                    },
+                    new MapObstacle
+                    {
+                        Id = "StartArea_rightup04",
+                        X = 780,
+                        Y = 270,
+                        Width = 250,
+                        Height = 50,
+                        Color = Color.Green
+                    },
+                    new MapObstacle
+                    {
+                        Id = "StartArea_Shop",
+                        X = 60,
+                        Y = 230,
+                        Width = 430,
+                        Height = 20,
+                        Color = Color.Green
+                    },
+                    new MapObstacle
+                    {
+                        Id = "StartArea_Shop2",
+                        X = 50,
+                        Y = 250,
+                        Width = 430,
+                        Height = 20,
+                        Color = Color.Green
+                    },
+                    new MapObstacle
+                    {
+                        Id = "StartArea_Shop3",
+                        X = 350,
+                        Y = 270,
+                        Width = 20,
+                        Height = 60,
+                        Color = Color.Green
+                    },
+                    new MapObstacle
+                    {
+                        Id = "StartArea_Shop4",
+                        X = 200,
+                        Y = 270,
+                        Width = 20,
+                        Height = 300,
+                        Color = Color.Green
+                    },
+                    new MapObstacle
+                    {
+                        Id = "StartArea_Down",
+                        X = 200,
+                        Y = 570,
+                        Width = 170,
+                        Height = 20,
+                        Color = Color.Green
+                    },
+                    new MapObstacle
+                    {
+                        Id = "StartArea_Down2",
+                        X = 290,
+                        Y = 440,
+                        Width = 20,
+                        Height = 200,
+                        Color = Color.Green
+                    },
+                    new MapObstacle
+                    {
+                        Id = "StartArea_Down3",
+                        X = 300,
+                        Y = 460,
+                        Width = 130,
+                        Height = 20,
+                        Color = Color.Green
+                    },
+                    new MapObstacle
+                    {
+                        Id = "StartArea_Down4",
+                        X = 400,
+                        Y = 460,
+                        Width = 20,
+                        Height = 200,
+                        Color = Color.Green
+                    },
+                    new MapObstacle
+                    {
+                        Id = "StartArea_Down5",
+                        X = 380,
+                        Y = 550,
+                        Width = 150,
+                        Height = 200,
+                        Color = Color.Green
+                    },
+                    new MapObstacle
+                    {
+                        Id = "Well",
+                        X = 555,
+                        Y = 280,
+                        Width = 60,
+                        Height = 80,
+                        Color = Color.Green
+                    },
+                    new MapObstacle
+                    {
+                        Id = "House_right",
+                        X = 800,
+                        Y = 390,
+                        Width = 400,
+                        Height = 180,
+                        Color = Color.Green
+                    },
+                    new MapObstacle
+                    {
+                        Id = "House_right2",
+                        X = 720,
+                        Y = 455,
+                        Width = 100,
+                        Height = 20,
+                        Color = Color.Green
+                    },
+                    new MapObstacle
+                    {
+                        Id = "rightwall",
+                        X = 1150,
+                        Y = 0,
+                        Width = 200,
+                        Height = 200,
+                        Color = Color.Green
+                    },
+                    new MapObstacle
+                    {
+                        Id = "rightwall2",
+                        X = 1150,
+                        Y = 200,
+                        Width = 200,
+                        Height = 400,
+                        Color = Color.Green
+                    },
+                    new MapObstacle
+                    {
+                        Id = "House_Left",
+                        X = 220,
+                        Y = 0,
+                        Width = 220,
+                        Height = 180,
+                        Color = Color.Green
+                    },
+                    new MapObstacle
+                    {
+                        Id = "wall_left",
+                        X = 0,
+                        Y = 0,
+                        Width = 100,
+                        Height = 200,
+                        Color = Color.Green
+                    }
+                },
                 ExitVerticalRatio = 0.5f,
                 NextMapId = "DungeonFloor1",
                 EntryX = 30,

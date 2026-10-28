@@ -47,8 +47,8 @@ namespace RPG.DoiTuong
                     MinDamage = 90,
                     MaxDamage = 150,
                     Defense = 10,
-                    X = 100,
-                    Y = 100,
+                    X = 145,
+                    Y = 135,
                     Skills = new List<Skill>
                     {
                         new Skill

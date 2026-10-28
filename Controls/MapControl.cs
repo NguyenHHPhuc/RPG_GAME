@@ -31,12 +31,14 @@ namespace RPG.Controls
         // Lưu mỗi quái vật cùng Panel hiển thị tương ứng trên bản đồ
         private readonly Dictionary<Enemy, Panel> enemyPanels = new Dictionary<Enemy, Panel>();
         private readonly List<Panel> obstaclePanels = new List<Panel>();
+        
+        private const bool ShowObstacleDebug = true; // Hiển thị các vật cản (tường) để debug
         public event EventHandler BattleRequested;
         public event EventHandler InventoryRequested;
         public event EventHandler HomeRequested;
         public event EventHandler MapExitRequested;
         public event EventHandler ShopRequested;
-        private int playerSpeed = 10;
+        private int playerSpeed = 5;
 
         private bool moveUp;
         private bool moveDown;
@@ -462,12 +464,44 @@ namespace RPG.Controls
                     Width = obstacle.Width,
                     Height = obstacle.Height,
 
-                    BackColor = obstacle.Color,
+                    BackColor = ShowObstacleDebug
+                        ? Color.Magenta
+                        : Color.Transparent,
 
-                    BorderStyle = BorderStyle.FixedSingle
+                    BorderStyle = ShowObstacleDebug
+                        ? BorderStyle.FixedSingle
+                        : BorderStyle.None
                 };
 
                 Controls.Add(wall);
+                // hiển thì tên các vật cản để debug
+                if (ShowObstacleDebug)
+                {
+                    Label lblObstacleName = new Label
+                    {
+                        Name = $"lbl_{obstacle.Id}",
+
+                        // Hiện tên vật cản
+                        Text = obstacle.Id,
+
+                        Dock = DockStyle.Fill,
+                        AutoSize = false,
+
+                        TextAlign = ContentAlignment.MiddleCenter,
+
+                        ForeColor = Color.White,
+                        BackColor = Color.Transparent,
+
+                        Font = new Font(
+                            "Arial",
+                            8,
+                            FontStyle.Bold
+                        )
+                    };
+
+                    wall.Controls.Add(lblObstacleName);
+                    lblObstacleName.BringToFront();
+                }
 
                 obstaclePanels.Add(wall);
 
