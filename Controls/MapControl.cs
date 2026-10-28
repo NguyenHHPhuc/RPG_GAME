@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Linq;
+using System.IO;
 using RPG.DoiTuong;
 namespace RPG.Controls
 {
@@ -14,6 +15,7 @@ namespace RPG.Controls
 
         private GameState gameState;
         private MapData mapData;
+        private Image mapBackgroundImage;
         // Ba khung hình hoạt ảnh đứng yên của nhân vật
         private Bitmap[] playerIdleFrames;
 
@@ -147,6 +149,8 @@ namespace RPG.Controls
             this.gameState = gameState;
             this.mapData = mapData;
 
+            LoadMapBackground();
+
             LoadObstacles();
             LoadPlayer();
             LoadEnemies();
@@ -159,62 +163,105 @@ namespace RPG.Controls
             gameTimer.Start();
 
         }
+        private void LoadMapBackground()
+        {
+            string fileName = mapData.Id switch
+            {
+                "StartArea" => "StartArea_BG.png",
+                "DungeonFloor1" => "DungeonFloor1_BG.png",
+                "DungeonFloor2" => "DungeonFloor2_BG.png",
+
+                _ => null
+            };
+
+            // Không có background tương ứng.
+            // Bản đồ sẽ tiếp tục sử dụng màu nền mặc định.
+            if (string.IsNullOrEmpty(fileName))
+            {
+                BackgroundImage = null;
+                return;
+            }
+
+            string imagePath = Path.Combine(
+                AppContext.BaseDirectory,
+                "Assets",
+                fileName
+            );
+
+            // Nếu chưa tìm thấy file, dùng màu nền hiện tại.
+            if (!File.Exists(imagePath))
+            {
+                BackgroundImage = null;
+                return;
+            }
+
+            // Tạo bản sao để không khóa file PNG.
+            using (Image source = Image.FromFile(imagePath))
+            {
+                mapBackgroundImage = new Bitmap(source);
+            }
+
+            BackgroundImage = mapBackgroundImage;
+
+            // Để ảnh phủ kín vùng chơi.
+            BackgroundImageLayout = ImageLayout.Stretch;
+        }
         private void ConfigureMap()
         {
-            // Cập nhật tên và màu sắc dựa trên MapData
+            // Cập nhật tên và màu chữ của bản đồ
             lblMapName.Text = $"{mapData.Id} - {mapData.Name}";
 
             BackColor = mapData.BackgroundColor;
             lblMapName.ForeColor = mapData.TextColor;
 
-            // Giới hạn vị trí cửa trong chiều cao của Map
             int maxTop = Math.Max(
                 0,
                 ClientSize.Height - pnlMapExit.Height
             );
 
-            int exitTop = (int)(
-                maxTop * mapData.ExitVerticalRatio
-            );
+            if (mapData.Id == "StartArea")
+            {
+                // Căn vùng tương tác vào cổng ở phía trên bên phải
+                pnlMapExit.Left =
+                    (int)(ClientSize.Width * 0.82)
+                    - pnlMapExit.Width / 2;
 
-            // Đặt cửa gần cạnh phải
-            pnlMapExit.Left = Math.Max(
-                0,
-                ClientSize.Width - pnlMapExit.Width - 5
-            );
+                pnlMapExit.Top =
+                    (int)(ClientSize.Height * 0.12)
+                    - pnlMapExit.Height / 2;
 
-            // Đảm bảo cửa không nằm ngoài Map
-            pnlMapExit.Top = Math.Max(
-                0,
-                Math.Min(exitTop, maxTop)
-            );
+                // Giữ hình cổng trong background nhìn thấy được
+                pnlMapExit.BackColor = Color.Transparent;
+                pnlMapExit.BorderStyle = BorderStyle.None;
+            }
+            else
+            {
+                // Các Dungeon vẫn giữ vị trí lối ra cũ
+                int exitTop = (int)(
+                    maxTop * mapData.ExitVerticalRatio
+                );
 
-            // Đặt cửa gần cạnh phải
-            pnlMapExit.Left = Math.Max(
-                0,
-                ClientSize.Width - pnlMapExit.Width - 5
-            );
+                pnlMapExit.Left = Math.Max(
+                    0,
+                    ClientSize.Width - pnlMapExit.Width - 5
+                );
 
-            // Đảm bảo cửa nằm trong bản đồ
-            maxTop = Math.Max(
-                0,
-                ClientSize.Height - pnlMapExit.Height
-            );
+                pnlMapExit.Top = Math.Max(
+                    0,
+                    Math.Min(exitTop, maxTop)
+                );
+            }
 
-            exitTop = Math.Max(0, Math.Min(exitTop, maxTop));
-
-            pnlMapExit.Top = exitTop;
+            // Đặt vùng tương tác cửa hàng vào vị trí cửa hàng trên ảnh
             if (shopPanel != null)
             {
-                shopPanel.Left = Math.Max(
-                    10,
-                    Math.Min(650, ClientSize.Width - shopPanel.Width - 180)
-                );
+                shopPanel.Left =
+                    (int)(ClientSize.Width * 0.19)
+                    - shopPanel.Width / 2;
 
-                shopPanel.Top = Math.Max(
-                    40,
-                    Math.Min(150, ClientSize.Height - shopPanel.Height - 40)
-                );
+                shopPanel.Top =
+                    (int)(ClientSize.Height * 0.52)
+                    - shopPanel.Height / 2;
             }
         }
         protected override void OnSizeChanged(EventArgs e)
@@ -444,36 +491,31 @@ namespace RPG.Controls
             if (mapData.Id != "StartArea")
                 return;
 
+            // Panel này chỉ dùng để phát hiện va chạm,
+            // hình cửa hàng đã có sẵn trong background.
             shopPanel = new Panel
             {
                 Name = "pnlShop",
-                Width = 110,
-                Height = 90,
-                BackColor = Color.SaddleBrown,
-                BorderStyle = BorderStyle.FixedSingle
-            };
-
-            // Tạo chữ hiển thị trên cửa hàng
-            Label lblShopTitle = new Label
-            {
-                Name = "lblShopTitle",
-                Text = "SHOP\nChạm để mở",
-                Dock = DockStyle.Fill,
-                TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = Color.White,
+                Size = new Size(80, 65),
                 BackColor = Color.Transparent,
-                Font = new Font("Arial", 11, FontStyle.Bold)
+                BorderStyle = BorderStyle.None
             };
 
-            shopPanel.Controls.Add(lblShopTitle);
-
-            // Thêm cửa hàng vào bản đồ
+            // Thêm vùng tương tác vào bản đồ
             Controls.Add(shopPanel);
 
-            // Đưa cửa hàng lên phía trước vật cản
+            // Căn vị trí dựa trên background
+            shopPanel.Left =
+                (int)(ClientSize.Width * 0.19)
+                - shopPanel.Width / 2;
+
+            shopPanel.Top =
+                (int)(ClientSize.Height * 0.52)
+                - shopPanel.Height / 2;
+
+            // Đảm bảo nhân vật và giao diện vẫn hiển thị phía trước
             shopPanel.BringToFront();
 
-            // Giữ các thành phần game quan trọng ở phía trước
             foreach (Panel enemyPanel in enemyPanels.Values)
                 enemyPanel.BringToFront();
 
