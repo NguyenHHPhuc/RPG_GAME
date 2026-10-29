@@ -33,6 +33,8 @@
 	  <Content Include="Assets\Demon.png" CopyToOutputDirectory="PreserveNewest" />
 	  <Content Include="Assets\Boss.png" CopyToOutputDirectory="PreserveNewest" />
 	  <Content Include="Assets\StartArea_BG.png" CopyToOutputDirectory="PreserveNewest" />
+	  <Content Include="Assets\DungeonFloor1_BG.png" CopyToOutputDirectory="PreserveNewest" />
+	  <Content Include="Assets\DungeonFloor2_BG.png" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

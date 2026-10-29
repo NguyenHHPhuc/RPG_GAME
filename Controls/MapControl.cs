@@ -32,7 +32,7 @@ namespace RPG.Controls
         private readonly Dictionary<Enemy, Panel> enemyPanels = new Dictionary<Enemy, Panel>();
         private readonly List<Panel> obstaclePanels = new List<Panel>();
         
-        private const bool ShowObstacleDebug = true; // Hiển thị các vật cản (tường) để debug
+        private const bool ShowObstacleDebug = false; // Hiển thị các vật cản (tường) để debug
         public event EventHandler BattleRequested;
         public event EventHandler InventoryRequested;
         public event EventHandler HomeRequested;
@@ -212,7 +212,7 @@ namespace RPG.Controls
         {
             // Cập nhật tên và màu chữ của bản đồ
             lblMapName.Text = $"{mapData.Id} - {mapData.Name}";
-
+            pnlMapExit.Visible = mapData.Id != "DungeonFloor2";
             BackColor = mapData.BackgroundColor;
             lblMapName.ForeColor = mapData.TextColor;
 
@@ -236,9 +236,47 @@ namespace RPG.Controls
                 pnlMapExit.BackColor = Color.Transparent;
                 pnlMapExit.BorderStyle = BorderStyle.None;
             }
+            else if (mapData.Id == "DungeonFloor1")
+            {
+                // Tỷ lệ vị trí cổng trên background
+                double exitXRatio = 0.95;
+                double exitYRatio = mapData.ExitVerticalRatio;
+
+                // Đặt tâm vùng tương tác tại tọa độ mong muốn
+                pnlMapExit.Left = (int)(
+                    ClientSize.Width * exitXRatio
+                    - pnlMapExit.Width / 2.0
+                );
+
+                pnlMapExit.Top = (int)(
+                    ClientSize.Height * exitYRatio
+                    - pnlMapExit.Height / 2.0
+                );
+
+                // Đảm bảo Panel không vượt khỏi vùng bản đồ
+                pnlMapExit.Left = Math.Max(
+                    0,
+                    Math.Min(
+                        pnlMapExit.Left,
+                        ClientSize.Width - pnlMapExit.Width
+                    )
+                );
+
+                pnlMapExit.Top = Math.Max(
+                    0,
+                    Math.Min(
+                        pnlMapExit.Top,
+                        ClientSize.Height - pnlMapExit.Height
+                    )
+                );
+                // Che cổng exit map, xóa đi ba dòng để hiển thị
+                pnlMapExit.BackColor = Color.Transparent;
+                pnlMapExit.BackgroundImage = null;
+                pnlMapExit.BorderStyle = BorderStyle.None;
+            }
             else
             {
-                // Các Dungeon vẫn giữ vị trí lối ra cũ
+                // Giữ cách đặt lối ra cũ cho các bản đồ khác
                 int exitTop = (int)(
                     maxTop * mapData.ExitVerticalRatio
                 );
@@ -388,9 +426,28 @@ namespace RPG.Controls
                     Controls.Add(enemyPanel);
                 }
 
-                // Đặt vị trí đúng theo dữ liệu Enemy
+                // Chọn kích thước hiển thị theo từng loại enemy
+                string enemyName = enemy.Name?.Trim().ToLowerInvariant() ?? "";
+
+                Size enemySize = enemyName switch
+                {
+                    "slime" => new Size(44, 44),
+                    "skeleton" => new Size(52, 60),
+                    "zombie" => new Size(52, 60),
+                    "demon" => new Size(52, 60),
+                    "yeti" => new Size(52, 60),
+                    "boss" => new Size(110, 110),
+
+                    _ => pnlEnemy1.Size
+                };
+
+                // Gán kích thước và vị trí cho Panel
+                enemyPanel.Size = enemySize;
                 enemyPanel.Left = enemy.X;
                 enemyPanel.Top = enemy.Y;
+
+                // Giữ tỷ lệ hình ảnh
+                enemyPanel.BackgroundImageLayout = ImageLayout.Zoom;
 
                 // Tải hình ảnh tương ứng với loại quái
                 Image enemyImage = LoadEnemySprite(enemy);
@@ -635,7 +692,7 @@ namespace RPG.Controls
 
                 return;
             }
-            if (newPlayerRect.IntersectsWith(pnlMapExit.Bounds))
+            if (pnlMapExit.Visible && newPlayerRect.IntersectsWith(pnlMapExit.Bounds))
             {
                 gameTimer.Stop();
 

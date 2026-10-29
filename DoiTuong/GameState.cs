@@ -47,8 +47,8 @@ namespace RPG.DoiTuong
                     MinDamage = 90,
                     MaxDamage = 150,
                     Defense = 10,
-                    X = 145,
-                    Y = 135,
+                    X = 145, //145, 135
+                    Y = 135, 
                     Skills = new List<Skill>
                     {
                         new Skill
@@ -96,7 +96,7 @@ namespace RPG.DoiTuong
                 {
                     new Enemy
                         {
-                            Id = "E001",
+                            Id = "SLIME_01",
                             MapId = "DungeonFloor1",
                             Name = "Slime",
                             Level = 1,
@@ -106,12 +106,12 @@ namespace RPG.DoiTuong
                             MinDamage = 8,
                             MaxDamage = 15,
                             Defense = 5,
-                            X = 400,
-                            Y = 250
+                            X = 320,
+                            Y = 190
                         },
                     new Enemy
                     {
-                        Id = "E004",
+                        Id = "SKELETON_01",
                             MapId = "DungeonFloor1",
                             Name = "Skeleton",
                             Level = 1,
@@ -121,13 +121,43 @@ namespace RPG.DoiTuong
                             MinDamage = 10,
                             MaxDamage = 18,
                             Defense = 6,
-                            X = 300,
-                            Y = 200
+                            X = 590,
+                            Y = 310
+                    },
+                    new Enemy
+                        {
+                            Id = "SLIME_01",
+                            MapId = "DungeonFloor1",
+                            Name = "Slime",
+                            Level = 1,
+                            GoldReward = 10,
+                            HP = 50,
+                            MaxHP = 50,
+                            MinDamage = 8,
+                            MaxDamage = 15,
+                            Defense = 5,
+                            X = 850,
+                            Y = 190
+                        },
+                    new Enemy
+                    {
+                        Id = "ZOMBIE_01",
+                            MapId = "DungeonFloor1",
+                            Name = "Zombie",
+                            Level = 1,
+                            GoldReward = 15,
+                            HP = 60,
+                            MaxHP = 60,
+                            MinDamage = 10,
+                            MaxDamage = 18,
+                            Defense = 6,
+                            X = 1070,
+                            Y = 310
                     },
 
                     new Enemy
                         {
-                            Id = "E002",
+                            Id = "YETI_01",
                             MapId = "DungeonFloor2",
                             Name = "Yeti",
                             Level = 2,
@@ -137,12 +167,42 @@ namespace RPG.DoiTuong
                             MinDamage = 12,
                             MaxDamage = 20,
                             Defense = 8,
-                            X = 400,
-                            Y = 250
+                            X = 300,
+                            Y = 170
+                        },
+                    new Enemy
+                        {
+                            Id = "YETI_02",
+                            MapId = "DungeonFloor2",
+                            Name = "Yeti",
+                            Level = 2,
+                            GoldReward = 20,
+                            HP = 80,
+                            MaxHP = 80,
+                            MinDamage = 12,
+                            MaxDamage = 20,
+                            Defense = 8,
+                            X = 900,
+                            Y = 400
+                        },
+                    new Enemy
+                        {
+                            Id = "Demon_01",
+                            MapId = "DungeonFloor2",
+                            Name = "Demon",
+                            Level = 2,
+                            GoldReward = 20,
+                            HP = 80,
+                            MaxHP = 80,
+                            MinDamage = 12,
+                            MaxDamage = 20,
+                            Defense = 8,
+                            X = 585,
+                            Y = 350
                         },
                     new Enemy
                     {
-                        Id = "E005",
+                            Id = "BOSS_01",
                             MapId = "DungeonFloor2",
                             Name = "boss",
                             IsBoss = true,
@@ -153,8 +213,8 @@ namespace RPG.DoiTuong
                             MinDamage = 14,
                             MaxDamage = 22,
                             Defense = 9,
-                            X = 350,
-                            Y = 220
+                            X = 1050,
+                            Y = 70
                     }
 
                      
