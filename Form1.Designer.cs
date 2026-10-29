@@ -28,30 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            lblGameName = new Label();
-            btnPlay = new Button();
             panelMain = new Panel();
             SuspendLayout();
-            // 
-            // lblGameName
-            // 
-            lblGameName.AutoSize = true;
-            lblGameName.Font = new Font("Segoe UI", 16F);
-            lblGameName.Location = new Point(299, 50);
-            lblGameName.Name = "lblGameName";
-            lblGameName.Size = new Size(140, 30);
-            lblGameName.TabIndex = 0;
-            lblGameName.Text = "GAME NAME";
-            // 
-            // btnPlay
-            // 
-            btnPlay.Location = new Point(329, 251);
-            btnPlay.Name = "btnPlay";
-            btnPlay.Size = new Size(75, 23);
-            btnPlay.TabIndex = 1;
-            btnPlay.Text = "PLAY";
-            btnPlay.UseVisualStyleBackColor = true;
-            // 
             // panelMain
             // 
             panelMain.Dock = DockStyle.Fill;
@@ -66,8 +44,6 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1264, 681);
             Controls.Add(panelMain);
-            Controls.Add(btnPlay);
-            Controls.Add(lblGameName);
             MinimumSize = new Size(1000, 650);
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
@@ -78,8 +54,6 @@
 
         #endregion
 
-        private Label lblGameName;
-        private Button btnPlay;
         private Panel panelMain;
     }
 }
