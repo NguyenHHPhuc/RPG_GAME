@@ -1,85 +1,129 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using RPG.DoiTuong;
 namespace RPG.Services
 {
     public class BattleService
     {
-        public int PlayerAttack(Player player, Enemy enemy)
+        // Trạng thái riêng của một trận (mỗi trận tạo một BattleService mới)
+        private bool shieldActive;
+        private bool reviveUsed;
+        private int bleedDamage;
+        private int bleedTurnsLeft;
+
+        #region Đòn đánh
+
+        // hitTwice = true khi nội tại Liên Kích kích hoạt
+        public int PlayerAttack(Player player, Enemy enemy, out bool hitTwice)
         {
-            // Lấy sát thương sau khi tính vũ khí đang trang bị
-            int damage = Random.Shared.Next(
-                player.EffectiveMinDamage,
-                player.EffectiveMaxDamage + 1);
-            // Trừ phòng thủ của quái vật
-            damage -= enemy.Defense;
+            int damage = Hit(enemy, player.RollDamage());
 
-            // Sát thương tối thiểu là 1
-            if (damage < 1)
-                damage = 1;
-
-            enemy.HP -= damage;
-
-            // Không để HP của quái vật xuống dưới 0
-            if (enemy.HP < 0)
-                enemy.HP = 0;
+            hitTwice = player.HasPassive(PassiveSkill.DoubleStrike) && !enemy.IsDead
+                && Random.Shared.Next(100) < SkillTree.DoubleStrikeChance;
+            if (hitTwice)
+                damage += Hit(enemy, player.RollDamage());
 
             return damage;
         }
 
+        // Trả về 0 nếu đòn bị Khiên Chắn chặn
         public int EnemyAttack(Player player, Enemy enemy)
         {
-            int damage = Random.Shared.Next(enemy.MinDamage, enemy.MaxDamage + 1);
+            if (shieldActive)
+            {
+                shieldActive = false;
+                return 0;
+            }
 
-            // Trừ phòng thủ của nhân vật sau khi tính giáp
-            damage -= player.EffectiveDefense;
+            return Hit(player, enemy.RollDamage());
+        }
 
-            // Sát thương tối thiểu là 1
-            if (damage < 1)
-                damage = 1;
-
-            player.HP -= damage;
-
-            // Không để HP của nhân vật xuống dưới 0
-            if (player.HP < 0)
-                player.HP = 0;
-
+        // Dùng chung cho mọi đòn đánh: trừ phòng thủ, sát thương tối thiểu là 1
+        private static int Hit(Character target, int rawDamage)
+        {
+            int damage = Math.Max(1, rawDamage - target.EffectiveDefense);
+            target.TakeDamage(damage);
             return damage;
         }
-        public bool IsEnemyDefeated(Enemy enemy)
-        {
-            return enemy.HP <= 0;
-        }
 
-        public bool IsPlayerDefeated(Player player)
-        {
-            return player.HP <= 0;
-        }
+        #endregion
+
+        #region Kỹ năng
+
         public bool CanUseSkill(Player player, Skill skill)
         {
             return player.MP >= skill.ManaCost;
         }
+
         public int UseSkill(Player player, Enemy enemy, Skill skill)
         {
-            if (!CanUseSkill(player, skill))
+            if (!player.TrySpendMana(skill.ManaCost))
                 return 0;
 
-            player.MP -= skill.ManaCost;
+            if (skill.BleedTurns > 0)
+            {
+                bleedDamage = skill.BleedDamage;
+                bleedTurnsLeft = skill.BleedTurns;
+            }
 
-            int damage = Random.Shared.Next(skill.MinDamage, skill.MaxDamage + 1);
-            damage -= enemy.Defense;
-
-            if (damage < 1)
-                damage = 1;
-
-            enemy.HP -= damage;
-
-            if (enemy.HP < 0)
-                enemy.HP = 0;
-
-            return damage;
+            return Hit(enemy, Random.Shared.Next(skill.MinDamage, skill.MaxDamage + 1));
         }
+
+        public int UseHealSkill(Player player, Skill skill)
+        {
+            if (!player.TrySpendMana(skill.ManaCost))
+                return 0;
+
+            return player.Heal(player.MaxHP * skill.HealPercent / 100);
+        }
+
+        public bool UseShieldSkill(Player player, Skill skill)
+        {
+            if (!player.TrySpendMana(skill.ManaCost))
+                return false;
+
+            shieldActive = true;
+            return true;
+        }
+
+        #endregion
+
+        #region Nội tại và hiệu ứng theo lượt
+
+        // Bất Tử: hồi sinh 1 lần mỗi trận
+        public bool TryRevive(Player player)
+        {
+            if (!player.IsDead || reviveUsed || !player.HasPassive(PassiveSkill.Revive))
+                return false;
+
+            reviveUsed = true;
+            player.Heal(Math.Max(1, player.MaxHP * SkillTree.RevivePercent / 100));
+            return true;
+        }
+
+        // Tái Sinh: hồi máu cuối mỗi lượt
+        public int ApplyRegeneration(Player player)
+        {
+            if (player.IsDead || !player.HasPassive(PassiveSkill.Regeneration))
+                return 0;
+
+            return player.Heal(Math.Max(1, player.MaxHP * SkillTree.RegenerationPercent / 100));
+        }
+
+        // Chảy máu: quái mất máu đầu mỗi lượt của nó
+        public int ApplyBleed(Enemy enemy)
+        {
+            if (bleedTurnsLeft <= 0 || enemy.IsDead)
+                return 0;
+
+            bleedTurnsLeft--;
+            return enemy.TakeDamage(bleedDamage);
+        }
+
+        #endregion
+
+        #region Phần thưởng
+
         public int GetExperienceReward(Enemy enemy)
         {
             if (enemy == null)
@@ -89,11 +133,18 @@ namespace RPG.Services
             if (enemy.IsBoss)
                 return 500;
 
-            // Quái thường nhận EXP theo cấp độ
             return Math.Max(20, enemy.Level * 50);
         }
 
-        // Cộng EXP và xử lý lên cấp
+        public int GetGoldReward(Enemy enemy)
+        {
+            if (enemy == null)
+                return 0;
+
+            return Math.Max(0, enemy.GoldReward);
+        }
+
+        // Cộng EXP và xử lý lên cấp, trả về các dòng thông báo cho nhật ký trận
         public List<string> GainExperience(Player player, int amount)
         {
             List<string> messages = new List<string>();
@@ -101,64 +152,26 @@ namespace RPG.Services
             if (player == null || amount <= 0)
                 return messages;
 
-            // Phòng trường hợp cấu hình EXP lên cấp không hợp lệ
             if (player.ExperienceToNextLevel <= 0)
                 player.ExperienceToNextLevel = 100;
 
-            // Cộng EXP nhận được
             player.Experience += amount;
-
             messages.Add($"Bạn nhận được {amount} EXP!");
 
-            // Cho phép lên nhiều cấp nếu EXP nhận được đủ lớn
+            // Có thể lên nhiều cấp nếu EXP nhận được đủ lớn
             while (player.Experience >= player.ExperienceToNextLevel)
             {
-                // Trừ EXP dùng để lên cấp
                 player.Experience -= player.ExperienceToNextLevel;
+                player.LevelUp();
 
-                player.Level++;
-
-                // Nhận một điểm kỹ năng
-                player.SkillPoints++;
-
-                // Tăng chỉ số nhân vật
-                player.MaxHP += 20;
-                player.MaxMP += 10;
-                player.MinDamage += 2;
-                player.MaxDamage += 3;
-                player.Defense += 1;
-
-                // Hồi đầy HP và MP khi lên cấp
-                player.HP = player.MaxHP;
-                player.MP = player.MaxMP;
-
-                // Tăng lượng EXP cần thiết cho cấp tiếp theo
-                player.ExperienceToNextLevel = (int)Math.Ceiling(
-                    player.ExperienceToNextLevel * 1.5
-                );
-
-                messages.Add(
-                    $"LÊN CẤP! Bạn đã đạt cấp {player.Level}!"
-                );
-
-                messages.Add(
-                    "HP và MP đã hồi đầy. Bạn nhận được 1 điểm kỹ năng."
-                );
+                messages.Add($"LÊN CẤP! Bạn đã đạt cấp {player.Level}!");
+                messages.Add($"HP và MP đã hồi đầy. Nhận 1 điểm kỹ năng và {Player.StatPointsPerLevel} điểm chỉ số.");
             }
 
-            messages.Add(
-                $"EXP hiện tại: {player.Experience}/{player.ExperienceToNextLevel}"
-            );
-
+            messages.Add($"EXP hiện tại: {player.Experience}/{player.ExperienceToNextLevel}");
             return messages;
         }
-        public int GetGoldReward(Enemy enemy)
-        {
-            if (enemy == null)
-                return 0;
 
-            // Không cho phần thưởng Gold bị âm
-            return Math.Max(0, enemy.GoldReward);
-        }
+        #endregion
     }
 }

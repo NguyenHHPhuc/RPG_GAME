@@ -145,7 +145,7 @@ namespace RPG
             {
                 int floor = gameState.HighestUnlockedFloor;
 
-                if (floor < 1 || floor > 5)
+                if (floor < 1 || floor > 2)
                 {
                     MessageBox.Show("Không có tầng Dungeon hợp lệ.");
                     return;
@@ -193,8 +193,8 @@ namespace RPG
                 gameState.ClearedFloors.Add(clearedFloor);
             }
 
-            // Mở khóa tầng kế tiếp, tối đa tầng 5
-            if (clearedFloor < 5)
+            // Mở khóa tầng kế tiếp, tối đa tầng 2
+            if (clearedFloor < 2)
             {
                 gameState.HighestUnlockedFloor = Math.Max(
                     gameState.HighestUnlockedFloor,
@@ -231,6 +231,8 @@ namespace RPG
             map.HomeRequested += Map_HomeRequested;
             map.MapExitRequested += Map_MapExitRequested;
             map.ShopRequested += Map_ShopRequested;
+            map.StatsRequested += (_, _) => ShowStats();
+            map.SkillTreeRequested += (_, _) => ShowSkillTree();
             // Hiển thị MapControl trong panelMain
             ShowControl(map);
         }
@@ -318,6 +320,18 @@ namespace RPG
         private void Shop_CloseClicked(object sender, EventArgs e)
         {
             ShowMap();
+        }
+        private void ShowStats()
+        {
+            StatsControl stats = new StatsControl(gameState);
+            stats.CloseClicked += (_, _) => ShowMap();
+            ShowControl(stats);
+        }
+        private void ShowSkillTree()
+        {
+            SkillTreeControl skillTree = new SkillTreeControl(gameState);
+            skillTree.CloseClicked += (_, _) => ShowMap();
+            ShowControl(skillTree);
         }
     }
 }

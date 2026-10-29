@@ -8,43 +8,29 @@ namespace RPG.Services
     {
         public bool UseItem(Player player, Item item)
         {
-            if (player == null || item == null)
+            return UseItem(player, item, out _, out _);
+        }
+
+        // Dùng bình hồi phục; trả về lượng HP/MP thực sự được hồi để hiển thị
+        public bool UseItem(Player player, Item item, out int healedHp, out int restoredMp)
+        {
+            healedHp = 0;
+            restoredMp = 0;
+
+            if (player == null || item == null || item.Quantity <= 0)
                 return false;
 
-            if (item.Quantity <= 0)
-                return false;
+            healedHp = player.Heal(item.HealAmount);
+            restoredMp = player.RestoreMana(item.ManaRestore);
 
-            bool used = false;
-
-            // Hồi HP
-            if (item.HealAmount > 0 && player.HP < player.MaxHP)
-            {
-                player.HP += item.HealAmount;
-
-                if (player.HP > player.MaxHP)
-                    player.HP = player.MaxHP;
-
-                used = true;
-            }
-
-            // Hồi MP
-            if (item.ManaRestore > 0 && player.MP < player.MaxMP)
-            {
-                player.MP += item.ManaRestore;
-
-                if (player.MP > player.MaxMP)
-                    player.MP = player.MaxMP;
-
-                used = true;
-            }
-
-            if (!used)
+            // HP và MP đều đã đầy thì không tốn vật phẩm
+            if (healedHp == 0 && restoredMp == 0)
                 return false;
 
             player.Inventory.RemoveItem(item);
-
             return true;
         }
+
         public int UseBomb(Player player, Enemy enemy, Item item)
         {
             if (player == null || enemy == null || item == null)
@@ -53,15 +39,13 @@ namespace RPG.Services
             if (player.Inventory == null ||
                 item.Quantity <= 0 ||
                 item.Damage <= 0 ||
-                enemy.HP <= 0)
+                enemy.IsDead)
             {
                 return 0;
             }
 
             // Sát thương Bomb gây ra thực tế không vượt quá HP còn lại
-            int actualDamage = Math.Min(enemy.HP, item.Damage);
-
-            enemy.HP -= actualDamage;
+            int actualDamage = enemy.TakeDamage(item.Damage);
 
             // Tiêu hao một Bomb
             player.Inventory.RemoveItem(item);

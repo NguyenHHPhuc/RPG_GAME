@@ -1,24 +1,46 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
+using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using RPG.DoiTuong;
 using RPG.Services;
 namespace RPG.Controls
 {
+    // Luật chơi và giao diện trận đấu. Phần hoạt ảnh nằm ở BattleControl.Animation.cs.
     public partial class BattleControl : UserControl
     {
-        private GameState gameState;
-        private BattleService battleService;
-        private Player player;
-        private Enemy enemy;
-        private ItemService itemService;
-        public event EventHandler BattleWon;
-        public event EventHandler BattleLost;
-        public event EventHandler GameWon;
+        private readonly GameState gameState;
+        private readonly BattleService battleService = new BattleService();
+        private readonly ItemService itemService = new ItemService();
+        private readonly Player player;
+        private readonly Enemy enemy;
+
+        // Vị trí gốc trong Designer, dùng khi đổi cỡ cửa sổ
+        private int designWidth;
+        private int playerBarLeft;
+        private int enemyBarLeft;
+        private int playerBarWidth;
+        private int enemyBarWidth;
+        private int playerHpOffset;
+        private int playerMpOffset;
+        private int enemyHpOffset;
+
+        // Skeleton bắn tên thay vì lao vào cận chiến
+        private bool enemyShootsArrows;
+
+        private int currentTurn = 1;
+
+        // Hàng nút kỹ năng, hiện thay chỗ 3 nút hành động
+        private readonly FlowLayoutPanel pnlSkillBar = new FlowLayoutPanel
+        {
+            AutoSize = true,
+            WrapContents = false,
+            Visible = false
+        };
+        private readonly ToolTip skillToolTip = new ToolTip();
+
         private enum BattleOutcome
         {
             None,
@@ -28,120 +50,370 @@ namespace RPG.Controls
         }
 
         private BattleOutcome pendingOutcome = BattleOutcome.None;
+
+        public event EventHandler BattleWon;
+        public event EventHandler BattleLost;
+        public event EventHandler GameWon;
+
         public BattleControl(GameState gameState)
         {
             InitializeComponent();
 
-            // Đăng ký sự kiện cho danh sách kỹ năng
-            lstSkills.SelectedIndexChanged += lstSkills_SelectedIndexChanged;
-            btnUseSelectedSkill.Click += btnUseSelectedSkill_Click;
-            btnCancelSkill.Click += btnCancelSkill_Click;
-
-            // Đăng ký sự kiện cho danh sách vật phẩm
             lstBattleItems.SelectedIndexChanged += lstBattleItems_SelectedIndexChanged;
             btnUseSelectedItem.Click += btnUseSelectedItem_Click;
             btnCancelItem.Click += btnCancelItem_Click;
 
-            btnContinue.Click += btnContinue_Click;
+            grpItemSelection.Visible = false;
+            Controls.Add(pnlSkillBar);
 
             this.gameState = gameState;
             player = gameState.Player;
             enemy = gameState.CurrentEnemy;
-            battleService = new BattleService();
-            itemService = new ItemService();
+
+            animationTimer = new System.Windows.Forms.Timer { Interval = 20 };
+            animationTimer.Tick += AnimationTimer_Tick;
+            floatingTextTimer = new System.Windows.Forms.Timer { Interval = 20 };
+            floatingTextTimer.Tick += FloatingTextTimer_Tick;
+
+            // Form1 gọi Dispose khi chuyển màn hình
+            Disposed += (_, _) => ReleaseResources();
+
             LoadBattle();
+            SaveDesignerPositions();
+            SizeChanged += (_, _) => ResizeHealthBars();
+            ResizeHealthBars();
         }
+
+        #region Khởi tạo và giao diện
+
         public void LoadBattle()
         {
             lblPlayerName.Text = player.Name;
             lblEnemyName.Text = enemy.Name;
 
-            progressPlayerHP.Minimum = 0;
-            progressPlayerHP.Maximum = player.MaxHP;
-            progressPlayerHP.Value = player.HP;
-            progressPlayerMP.Minimum = 0;
-            progressPlayerMP.Maximum = player.MaxMP;
-            progressPlayerMP.Value = player.MP;
+            LoadCatBattleSprite();
 
-            progressEnemyHP.Minimum = 0;
-            progressEnemyHP.Maximum = enemy.MaxHP;
-            progressEnemyHP.Value = enemy.HP;
+            string enemyType = enemy.Name?.Trim().ToLowerInvariant() ?? "";
+            Image? enemySprite = LoadAssetImage(GetEnemySpriteFileName(enemyType));
+            if (enemySprite != null)
+                ReplaceImage(picBattleEnemy, enemySprite);
 
-            UpdateStatsText();
-            AddBattleLog($"Trận chiến bắt đầu: {player.Name} đối đầu với {enemy.Name}.");
+            arrowImage = LoadAssetImage("Arrow.png");
+            enemyShootsArrows = enemyType == "skeleton" && arrowImage != null;
 
-            AddBattleLog($"HP người chơi: {player.HP}/{player.MaxHP}");
+            UpdateBattleUI();
+            AlignIconsWithNames();
 
-            AddBattleLog($"HP quái vật: {enemy.HP}/{enemy.MaxHP}");
+            AddLog($"Trận chiến bắt đầu: {player.Name} đối đầu với {enemy.Name}.");
+            AddLog($"HP người chơi: {player.HP}/{player.MaxHP}; MP: {player.MP}/{player.MaxMP}.");
+            AddLog($"HP quái vật: {enemy.HP}/{enemy.MaxHP}.");
         }
-        private void LoadSkillList()
+
+        private static string GetEnemySpriteFileName(string enemyType)
         {
-            // Xóa nguồn dữ liệu cũ
-            lstSkills.DataSource = null;
-
-            // Hiển thị tên của từng kỹ năng
-            lstSkills.DisplayMember = "Name";
-
-            // Nạp danh sách kỹ năng của nhân vật
-            lstSkills.DataSource = player.Skills;
-
-            if (player.Skills.Count > 0)
+            return enemyType switch
             {
-                lstSkills.SelectedIndex = 0;
+                "slime" => "Slime.png",
+                "skeleton" => "Skeleton_Left_Handed.png",
+                "zombie" => "Zombie_Adult.png",
+                "demon" => "Demon.png",
+                "yeti" => "Yeti.png",
+                "boss" => "Boss.png",
+                _ => "Zombie_Adult.png"
+            };
+        }
+
+        private static Image? LoadAssetImage(string fileName)
+        {
+            string imagePath = Path.Combine(AppContext.BaseDirectory, "Assets", fileName);
+            if (!File.Exists(imagePath))
+                return null;
+
+            // Chép sang Bitmap mới để không khóa file ảnh
+            using Image source = Image.FromFile(imagePath);
+            return new Bitmap(source);
+        }
+
+        private static void ReplaceImage(PictureBox pictureBox, Image image)
+        {
+            pictureBox.Image?.Dispose();
+            pictureBox.Image = image;
+        }
+
+        private void LoadCatBattleSprite()
+        {
+            // Spritesheet 3 frame nằm ngang, chỉ lấy frame đầu
+            using Bitmap spriteSheet = global::RPG.Properties.Resources.Cat_idle_1;
+            int frameWidth = spriteSheet.Width / 3;
+            int frameHeight = spriteSheet.Height;
+
+            Bitmap catFrame = new Bitmap(frameWidth, frameHeight);
+            using (Graphics graphics = Graphics.FromImage(catFrame))
+            {
+                graphics.DrawImage(spriteSheet, new Rectangle(0, 0, frameWidth, frameHeight),
+                    new Rectangle(0, 0, frameWidth, frameHeight), GraphicsUnit.Pixel);
             }
+
+            ReplaceImage(picBattlePlayer, catFrame);
+            picBattlePlayer.SizeMode = PictureBoxSizeMode.Zoom;
+        }
+
+        private void SaveDesignerPositions()
+        {
+            designWidth = ClientSize.Width;
+            playerBarLeft = pnlPlayerHP.Left;
+            enemyBarLeft = pnlEnemyHP.Left;
+            playerBarWidth = pnlPlayerHP.Width;
+            enemyBarWidth = pnlEnemyHP.Width;
+
+            playerHpOffset = lblPlayerHP.Left - pnlPlayerHP.Left;
+            playerMpOffset = lblPlayerMP.Left - pnlPlayerMP.Left;
+            enemyHpOffset = lblEnemyHP.Left - pnlEnemyHP.Left;
+        }
+
+        private void ResizeHealthBars()
+        {
+            // Chia phần rộng thêm đều cho hai cột máu
+            int widthChange = (ClientSize.Width - designWidth) / 2;
+            int newPlayerWidth = Math.Max(120, playerBarWidth + widthChange);
+            int newEnemyWidth = Math.Max(120, enemyBarWidth + widthChange);
+            int newEnemyLeft = enemyBarLeft + widthChange;
+
+            pnlPlayerHP.SetBounds(playerBarLeft, pnlPlayerHP.Top, newPlayerWidth, pnlPlayerHP.Height);
+            pnlPlayerMP.SetBounds(playerBarLeft, pnlPlayerMP.Top, newPlayerWidth, pnlPlayerMP.Height);
+            pnlEnemyHP.SetBounds(newEnemyLeft, pnlEnemyHP.Top, newEnemyWidth, pnlEnemyHP.Height);
+            pnlPlayerXP.SetBounds(pnlEncounterScene.Left, pnlEncounterScene.Bottom + 18,
+                pnlEncounterScene.Width, pnlPlayerXP.Height);
+            UpdateBattleUI();
+
+            lblPlayerName.Left = playerBarLeft + (newPlayerWidth - lblPlayerName.Width) / 2;
+            lblEnemyName.Left = newEnemyLeft + (newEnemyWidth - lblEnemyName.Width) / 2;
+            lblPlayerHP.Left = playerBarLeft + playerHpOffset;
+            lblPlayerMP.Left = playerBarLeft + playerMpOffset;
+            lblEnemyHP.Left = newEnemyLeft + enemyHpOffset;
+            AlignIconsWithNames();
+        }
+
+        private void AlignIconsWithNames()
+        {
+            // Hình nằm trong pnlEncounterScene nên phải trừ Left của panel
+            picBattlePlayer.Left = lblPlayerName.Left + lblPlayerName.Width / 2
+                - pnlEncounterScene.Left - picBattlePlayer.Width / 2;
+            picBattleEnemy.Left = lblEnemyName.Left + lblEnemyName.Width / 2
+                - pnlEncounterScene.Left - picBattleEnemy.Width / 2;
+        }
+
+        private void UpdateBattleUI()
+        {
+            UpdateBarFill(pnlPlayerHP, pnlPlayerHPFill, player.HP, player.MaxHP);
+            UpdateBarFill(pnlPlayerMP, pnlPlayerMPFill, player.MP, player.MaxMP);
+            UpdateBarFill(pnlEnemyHP, pnlEnemyHPFill, enemy.HP, enemy.MaxHP);
+
+            lblPlayerHP.Text = $"Máu: {player.HP} / {player.MaxHP}";
+            lblPlayerMP.Text = $"Năng lượng: {player.MP} / {player.MaxMP}";
+            lblEnemyHP.Text = $"Máu: {enemy.HP} / {enemy.MaxHP}";
+
+            int maxExperience = Math.Max(1, player.ExperienceToNextLevel);
+            lblPlayerXP.Text = $"Kinh nghiệm: {player.Experience} / {maxExperience} (Cấp {player.Level})";
+            UpdateBarFill(pnlPlayerXP, pnlPlayerXPFill, player.Experience, maxExperience);
+        }
+
+        private static void UpdateBarFill(Panel bar, Panel fill, int current, int maximum)
+        {
+            double ratio = maximum <= 0 ? 0 : (double)current / maximum;
+            ratio = Math.Clamp(ratio, 0, 1);
+            fill.SetBounds(0, 0, (int)(bar.ClientSize.Width * ratio), bar.ClientSize.Height);
+        }
+
+        private void SetActionButtonsEnabled(bool enabled)
+        {
+            btnAttack.Enabled = enabled;
+            btnSkill.Enabled = enabled;
+            btnItem.Enabled = enabled;
+        }
+
+        private void SetActionButtonsVisible(bool visible)
+        {
+            btnAttack.Visible = visible;
+            btnSkill.Visible = visible;
+            btnItem.Visible = visible;
+        }
+
+        private void AddLog(string message)
+        {
+            lstBattleLog.Items.Add(message);
+            lstBattleLog.TopIndex = lstBattleLog.Items.Count - 1;
+        }
+
+        private void ReleaseResources()
+        {
+            animationTimer.Stop();
+            animationTimer.Dispose();
+            floatingTextTimer.Stop();
+            floatingTextTimer.Dispose();
+
+            picBattlePlayer.Image?.Dispose();
+            picBattleEnemy.Image?.Dispose();
+            arrowImage?.Dispose();
+            tintedImage?.Dispose();
+            floatingFont.Dispose();
+            smokeBrush.Dispose();
+            skillToolTip.Dispose();
+        }
+
+        private void lblEnemyName_Click(object sender, EventArgs e)
+        {
+        }
+
+        #endregion
+
+        #region Lượt chơi
+
+        private void btnAttack_Click(object sender, EventArgs e)
+        {
+            int damage = battleService.PlayerAttack(player, enemy, out bool hitTwice);
+            if (hitTwice)
+                AddLog($"Lượt {currentTurn}: Liên Kích! {player.Name} đánh 2 lần, tổng {damage} sát thương cho {enemy.Name}.");
             else
-            {
-                lblSkillInfo.Text = "Bạn chưa có kỹ năng nào.";
-                btnUseSelectedSkill.Enabled = false;
-            }
+                AddLog($"Lượt {currentTurn}: {player.Name} gây {damage} sát thương cho {enemy.Name}.");
+            StrikeEnemy(damage);
         }
-        private void AddBattleLog(string message)
-        {
-            rtbBattleLog.AppendText(
-                message + Environment.NewLine
-            );
 
-            // Cuộn xuống dòng mới nhất
-            rtbBattleLog.SelectionStart = rtbBattleLog.TextLength;
-            rtbBattleLog.ScrollToCaret();
+        // Dùng chung cho đánh thường, kỹ năng và bom.
+        // Đoạn code trong lambda chỉ chạy khi hoạt ảnh kết thúc.
+        private void StrikeEnemy(int damage)
+        {
+            AnimateStrike(true, damage, () =>
+            {
+                if (enemy.IsDead)
+                    EnemyDefeated();
+                else
+                    EnemyTurn();
+            });
         }
-        private void PrepareBattleEnd(BattleOutcome outcome)
+
+        private void EnemyTurn()
+        {
+            // Chảy máu tính đầu lượt quái, có thể hạ quái luôn
+            int bleed = battleService.ApplyBleed(enemy);
+            if (bleed > 0)
+            {
+                AddLog($"{enemy.Name} chảy máu, mất {bleed} HP.");
+                ShowFloatingText($"-{bleed}", picBattleEnemy, BleedColor);
+                UpdateBattleUI();
+                if (enemy.IsDead)
+                {
+                    picBattleEnemy.Visible = false;
+                    EnemyDefeated();
+                    return;
+                }
+            }
+
+            int damage = battleService.EnemyAttack(player, enemy);
+            if (damage == 0)
+                AddLog($"Lượt {currentTurn}: Khiên Chắn chặn hoàn toàn đòn của {enemy.Name}!");
+            else
+                AddLog($"Lượt {currentTurn}: {enemy.Name} gây {damage} sát thương cho {player.Name}.");
+
+            // Hồi sinh trước hoạt ảnh để nhân vật không bị ngã
+            bool revived = battleService.TryRevive(player);
+            if (revived)
+                AddLog($"Bất Tử: {player.Name} được hồi sinh với {player.HP} HP!");
+
+            AnimateStrike(false, damage, () =>
+            {
+                if (player.IsDead)
+                {
+                    PlayerDefeated();
+                    return;
+                }
+
+                if (revived)
+                    ShowFloatingText("Hồi sinh!", picBattlePlayer, GoldColor);
+
+                int regen = battleService.ApplyRegeneration(player);
+                if (regen > 0)
+                {
+                    AddLog($"Tái Sinh: {player.Name} hồi {regen} HP.");
+                    ShowFloatingText($"+{regen} HP", picBattlePlayer, HealColor);
+                    UpdateBattleUI();
+                }
+
+                currentTurn++;
+                SetActionButtonsEnabled(true);
+            });
+        }
+
+        private void EnemyDefeated()
+        {
+            // Chặn trao thưởng hai lần
+            if (pendingOutcome != BattleOutcome.None)
+                return;
+
+            bool isFinalBoss = enemy.IsBoss && enemy.MapId == "DungeonFloor2";
+            gameState.Enemies?.Remove(enemy);
+
+            AddLog("----------------------------------------");
+            AddLog($"Bạn đã đánh bại {enemy.Name}!");
+
+            int goldReward = battleService.GetGoldReward(enemy);
+            player.Gold += goldReward;
+            AddLog($"Bạn nhận được {goldReward} Gold. Tổng Gold: {player.Gold}.");
+
+            int expReward = battleService.GetExperienceReward(enemy);
+            foreach (string message in battleService.GainExperience(player, expReward))
+                AddLog(message);
+
+            ShowFloatingText($"+{expReward} EXP", picBattlePlayer, GoldColor);
+            UpdateBattleUI();
+            gameState.CurrentEnemy = null;
+
+            if (isFinalBoss)
+            {
+                gameState.IsGameWon = true;
+                AddLog("Bạn đã chinh phục Dungeon!");
+                AddLog("Nhấn nút bên dưới để xem màn hình chiến thắng.");
+                FinishBattle(BattleOutcome.GameVictory);
+                return;
+            }
+
+            AddLog("Trận chiến kết thúc.");
+            AddLog("Nhấn nút bên dưới để quay lại bản đồ.");
+            FinishBattle(BattleOutcome.NormalVictory);
+        }
+
+        private void PlayerDefeated()
+        {
+            AddLog("----------------------------------------");
+            AddLog($"{player.Name} đã bị đánh bại.");
+            AddLog("Nhấn nút bên dưới để quay về menu chính.");
+            FinishBattle(BattleOutcome.PlayerLost);
+        }
+
+        private void FinishBattle(BattleOutcome outcome)
         {
             pendingOutcome = outcome;
-
-            // Ẩn các khung lựa chọn đang mở
-            grpSkillSelection.Visible = false;
+            animationTimer.Stop();
+            pnlSkillBar.Visible = false;
             grpItemSelection.Visible = false;
+            SetActionButtonsVisible(false);
 
-            // Không cho thực hiện thêm hành động trong trận đã kết thúc
-            btnAttack.Enabled = false;
-            btnSkill.Enabled = false;
-            btnItem.Enabled = false;
-
-            // Hiện nút xác nhận kết thúc
-            if (outcome == BattleOutcome.NormalVictory)
+            btnContinue.Bounds = btnSkill.Bounds;
+            btnContinue.Text = outcome switch
             {
-                btnContinue.Text = "Quay lại bản đồ";
-            }
-            else if (outcome == BattleOutcome.GameVictory)
-            {
-                btnContinue.Text = "Xem chiến thắng";
-            }
-            else if (outcome == BattleOutcome.PlayerLost)
-            {
-                btnContinue.Text = "Về menu chính";
-            }
-
+                BattleOutcome.NormalVictory => "Quay lại bản đồ",
+                BattleOutcome.GameVictory => "Xem chiến thắng",
+                BattleOutcome.PlayerLost => "Về menu chính",
+                _ => "Tiếp tục"
+            };
             btnContinue.Visible = true;
             btnContinue.BringToFront();
         }
+
         private void btnContinue_Click(object sender, EventArgs e)
         {
             BattleOutcome outcome = pendingOutcome;
-
-            // Tránh xử lý cùng kết quả nhiều lần
             pendingOutcome = BattleOutcome.None;
-
             btnContinue.Visible = false;
 
             switch (outcome)
@@ -149,347 +421,241 @@ namespace RPG.Controls
                 case BattleOutcome.NormalVictory:
                     BattleWon?.Invoke(this, EventArgs.Empty);
                     break;
-
                 case BattleOutcome.GameVictory:
                     GameWon?.Invoke(this, EventArgs.Empty);
                     break;
-
                 case BattleOutcome.PlayerLost:
                     BattleLost?.Invoke(this, EventArgs.Empty);
                     break;
             }
         }
-        private void UpdateStatsText()
-        {
-            lblPlayerHP.Text = $"{player.HP} / {player.MaxHP}";
-            lblPlayerMP.Text = $"{player.MP} / {player.MaxMP}";
-            lblEnemyHP.Text = $"{enemy.HP} / {enemy.MaxHP}";
-        }
-        private void lblEnemyName_Click(object sender, EventArgs e)
-        {
 
-        }
+        #endregion
 
-        private void btnAttack_Click(object sender, EventArgs e)
-        {
-            int playerDamage = battleService.PlayerAttack(player, enemy);
-
-            AddBattleLog(
-                $"{player.Name} tấn công {enemy.Name}, " +
-                $"gây {playerDamage} sát thương!"
-            );
-
-            UpdateBattleUI();
-
-            // Kiểm tra quái vật đã bị đánh bại chưa
-            if (battleService.IsEnemyDefeated(enemy))
-            {
-                EnemyDefeated();
-                return;
-            }
-
-            // Quái vật thực hiện lượt phản công
-            EnemyTurn();
-        }
-
-
-        private void UpdateBattleUI()
-        {
-            progressPlayerHP.Value = player.HP;
-            progressPlayerMP.Value = player.MP;
-            progressEnemyHP.Value = enemy.HP;
-
-            UpdateStatsText();
-        }
-        private void EnemyDefeated()
-        {
-            bool isFinalBoss =
-        enemy.IsBoss &&
-        enemy.MapId == "DungeonFloor5";
-
-            // Chỉ thưởng khi xóa được quái khỏi danh sách
-            if (!gameState.Enemies.Remove(enemy))
-                return;
-            AddBattleLog("----------------------------------------");
-            AddBattleLog($"Bạn đã đánh bại {enemy.Name}!");
-
-            // Thưởng Gold
-            int goldReward = battleService.GetGoldReward(enemy);
-            player.Gold += goldReward;
-
-            AddBattleLog(
-                $"Bạn nhận được {goldReward} Gold! " +
-                $"Tổng Gold: {player.Gold}"
-            );
-
-            // Thưởng EXP và kiểm tra lên cấp
-            int expReward = battleService.GetExperienceReward(enemy);
-
-            List<string> messages = battleService.GainExperience(
-                player,
-                expReward
-            );
-
-            foreach (string message in messages)
-            {
-                AddBattleLog(message);
-            }
-
-            // Không còn mục tiêu chiến đấu
-            gameState.CurrentEnemy = null;
-
-            if (isFinalBoss)
-            {
-                gameState.IsGameWon = true;
-
-                AddBattleLog("Bạn đã chinh phục Dungeon!");
-                AddBattleLog("Nhấn nút bên dưới để xem kết quả chiến thắng.");
-
-                PrepareBattleEnd(BattleOutcome.GameVictory);
-                return;
-            }
-
-            AddBattleLog("Trận chiến kết thúc.");
-            AddBattleLog("Nhấn nút bên dưới để quay lại bản đồ.");
-
-            PrepareBattleEnd(BattleOutcome.NormalVictory);
-        }
-        private void PlayerDefeated()
-        {
-            AddBattleLog("----------------------------------------");
-            AddBattleLog("Bạn đã bị đánh bại!");
-            AddBattleLog("Nhấn nút bên dưới để quay về menu chính.");
-
-            PrepareBattleEnd(BattleOutcome.PlayerLost);
-        }
+        #region Kỹ năng
 
         private void btnSkill_Click(object sender, EventArgs e)
         {
-            if (player.Skills == null || player.Skills.Count == 0)
+            if (player.Skills.Count == 0)
             {
-                MessageBox.Show("Bạn chưa có kỹ năng nào!");
+                AddLog("Bạn chưa có kỹ năng. Hãy mở khóa kỹ năng trong Cây kỹ năng.");
                 return;
             }
 
-            LoadSkillList();
-
-            grpSkillSelection.Visible = true;
-            grpSkillSelection.BringToFront();
+            ShowSkillBar();
         }
-        private void lstSkills_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            Skill skill = lstSkills.SelectedItem as Skill;
 
-            if (skill == null)
+        private void ShowSkillBar()
+        {
+            // Tạo lại nút mỗi lần mở vì MP thay đổi theo lượt
+            while (pnlSkillBar.Controls.Count > 0)
+                pnlSkillBar.Controls[0].Dispose();
+
+            foreach (Skill skill in player.Skills)
             {
-                lblSkillInfo.Text = "Hãy chọn một kỹ năng.";
-                btnUseSelectedSkill.Enabled = false;
-                return;
+                bool enoughMana = battleService.CanUseSkill(player, skill);
+                Button button = CreateSkillBarButton(enoughMana
+                    ? $"{skill.Name}\n{skill.ManaCost} MP"
+                    : $"{skill.Name}\nThiếu MP");
+                button.Enabled = enoughMana;
+                skillToolTip.SetToolTip(button, GetSkillDescription(skill));
+                button.Click += (_, _) => UseSkill(skill);
+                pnlSkillBar.Controls.Add(button);
             }
 
-            lblSkillInfo.Text =
-                $"Kỹ năng: {skill.Name}\r\n" +
-                $"Sát thương: {skill.MinDamage} - {skill.MaxDamage}\r\n" +
-                $"Mana tiêu hao: {skill.ManaCost}\r\n" +
-                $"MP hiện tại: {player.MP}/{player.MaxMP}";
+            Button cancelButton = CreateSkillBarButton("Hủy");
+            cancelButton.Click += (_, _) => HideSkillBar();
+            pnlSkillBar.Controls.Add(cancelButton);
 
-            btnUseSelectedSkill.Enabled = true;
+            SetActionButtonsVisible(false);
+            pnlSkillBar.Anchor = AnchorStyles.Bottom;
+            pnlSkillBar.Location = new Point(
+                (ClientSize.Width - pnlSkillBar.PreferredSize.Width) / 2, btnAttack.Top);
+            pnlSkillBar.Visible = true;
+            pnlSkillBar.BringToFront();
         }
-        private void btnUseSelectedSkill_Click(object sender, EventArgs e)
+
+        private Button CreateSkillBarButton(string text)
         {
-            // Lấy kỹ năng đang được chọn
-            Skill skill = lstSkills.SelectedItem as Skill;
-
-            if (skill == null)
+            return new Button
             {
-                MessageBox.Show("Vui lòng chọn một kỹ năng!");
-                return;
-            }
+                Text = text,
+                Size = btnAttack.Size,
+                Margin = new Padding(6, 0, 6, 0)
+            };
+        }
 
-            // Kiểm tra người chơi có đủ MP không
+        private void HideSkillBar()
+        {
+            pnlSkillBar.Visible = false;
+            SetActionButtonsVisible(true);
+            SetActionButtonsEnabled(true);
+        }
+
+        private static string GetSkillDescription(Skill skill)
+        {
+            return skill.Type switch
+            {
+                SkillType.Heal => $"Hồi {skill.HealPercent}% Máu tối đa. Tốn {skill.ManaCost} MP.",
+                SkillType.Shield => $"Chặn hoàn toàn đòn kế tiếp của quái. Tốn {skill.ManaCost} MP.",
+                _ => $"Gây {skill.MinDamage}-{skill.MaxDamage} sát thương" +
+                    (skill.BleedTurns > 0
+                        ? $", chảy máu {skill.BleedDamage} HP/lượt trong {skill.BleedTurns} lượt"
+                        : "") +
+                    $". Tốn {skill.ManaCost} MP."
+            };
+        }
+
+        private void UseSkill(Skill skill)
+        {
             if (!battleService.CanUseSkill(player, skill))
             {
-                AddBattleLog($"Không đủ MP để sử dụng {skill.Name}.");
+                AddLog($"Không đủ MP để sử dụng {skill.Name}.");
                 return;
             }
 
-            // Sử dụng đúng kỹ năng đã chọn
-            int damage = battleService.UseSkill(
-                player,
-                enemy,
-                skill
-            );
+            pnlSkillBar.Visible = false;
+            SetActionButtonsVisible(true);
+            SetActionButtonsEnabled(false);
 
-            // Đóng khung chọn kỹ năng
-            grpSkillSelection.Visible = false;
-
-            AddBattleLog($"{player.Name} sử dụng {skill.Name}, " + $"gây {damage} sát thương!");
-
-            UpdateBattleUI();
-
-            // Nếu quái đã bị đánh bại, xử lý kết thúc trận chiến
-            if (battleService.IsEnemyDefeated(enemy))
+            switch (skill.Type)
             {
-                EnemyDefeated();
-                return;
-            }
+                case SkillType.Heal:
+                    int healed = battleService.UseHealSkill(player, skill);
+                    AddLog($"Lượt {currentTurn}: {player.Name} dùng {skill.Name}, hồi {healed} HP.");
+                    ShowFloatingText($"+{healed} HP", picBattlePlayer, HealColor);
+                    UpdateBattleUI();
+                    EnemyTurn();
+                    break;
 
-            // Nếu quái vẫn còn sống, đến lượt quái tấn công
-            EnemyTurn();
+                case SkillType.Shield:
+                    battleService.UseShieldSkill(player, skill);
+                    AddLog($"Lượt {currentTurn}: {player.Name} dùng {skill.Name}, sẽ chặn đòn kế tiếp.");
+                    ShowFloatingText($"-{skill.ManaCost} MP", picBattlePlayer, ManaColor);
+                    UpdateBattleUI();
+                    EnemyTurn();
+                    break;
+
+                default:
+                    int damage = battleService.UseSkill(player, enemy, skill);
+                    AddLog($"Lượt {currentTurn}: {player.Name} dùng {skill.Name}, gây {damage} sát thương cho {enemy.Name}.");
+                    if (skill.BleedTurns > 0)
+                        AddLog($"{enemy.Name} bị chảy máu trong {skill.BleedTurns} lượt.");
+                    ShowFloatingText($"-{skill.ManaCost} MP", picBattlePlayer, ManaColor);
+                    UpdateBattleUI();
+                    StrikeEnemy(damage);
+                    break;
+            }
         }
-        private void btnCancelSkill_Click(object sender, EventArgs e)
-        {
-            grpSkillSelection.Visible = false;
-        }
+
+        #endregion
+
+        #region Vật phẩm
 
         private void btnItem_Click(object sender, EventArgs e)
         {
             LoadBattleItemList();
-
             if (lstBattleItems.Items.Count == 0)
             {
-                AddBattleLog("Bạn không có vật phẩm sử dụng được trong chiến đấu.");
+                AddLog("Bạn không có vật phẩm sử dụng được trong chiến đấu.");
                 return;
             }
 
-            // Đóng khung chọn skill nếu đang mở
-            grpSkillSelection.Visible = false;
-
-            // Mở khung chọn vật phẩm
             grpItemSelection.Visible = true;
             grpItemSelection.BringToFront();
+            SetActionButtonsEnabled(false);
         }
+
         private void LoadBattleItemList()
         {
-            var usableItems = player.Inventory.Items
-                .Where(item =>
-                    item.Quantity > 0 &&
-                    (item.HealAmount > 0 || item.ManaRestore > 0 || item.Damage > 0))
-                .ToList();
+            List<Item> usableItems = player.Inventory?.Items?.Where(item =>
+                item.Quantity > 0 &&
+                (item.HealAmount > 0 || item.ManaRestore > 0 || item.Damage > 0))
+                .ToList() ?? new List<Item>();
 
             lstBattleItems.DataSource = null;
             lstBattleItems.DisplayMember = nameof(Item.Name);
             lstBattleItems.DataSource = usableItems;
-
             btnUseSelectedItem.Enabled = usableItems.Count > 0;
 
-            if (usableItems.Count == 0)
-            {
-                lblBattleItemInfo.Text =
-                    "Không có vật phẩm sử dụng được.";
-            }
-            else
-            {
+            if (usableItems.Count > 0)
                 lstBattleItems.SelectedIndex = 0;
-            }
+            else
+                lblBattleItemInfo.Text = "Không có vật phẩm sử dụng được.";
         }
-        private void lstBattleItems_SelectedIndexChanged( object sender, EventArgs e)
+
+        private void lstBattleItems_SelectedIndexChanged(object sender, EventArgs e)
         {
-            Item item = lstBattleItems.SelectedItem as Item;
-
-            if (item == null)
+            if (lstBattleItems.SelectedItem is not Item item)
             {
-                lblBattleItemInfo.Text =
-                    "Hãy chọn một vật phẩm.";
-
+                lblBattleItemInfo.Text = "Hãy chọn một vật phẩm.";
                 btnUseSelectedItem.Enabled = false;
                 return;
             }
 
             lblBattleItemInfo.Text =
-                $"{item.Name}\r\n" +
-                $"{item.Description}\r\n" +
-                $"Số lượng: {item.Quantity}\r\n" +
-                $"Hồi HP: {item.HealAmount}\r\n" +
-                $"Hồi MP: {item.ManaRestore}\r\n" +
+                $"{item.Name}{Environment.NewLine}" +
+                $"{item.Description}{Environment.NewLine}" +
+                $"Số lượng: {item.Quantity}{Environment.NewLine}" +
+                $"Hồi HP: {item.HealAmount}{Environment.NewLine}" +
+                $"Hồi MP: {item.ManaRestore}{Environment.NewLine}" +
                 $"Sát thương: {item.Damage}";
-
             btnUseSelectedItem.Enabled = true;
         }
+
         private void btnUseSelectedItem_Click(object sender, EventArgs e)
         {
-            Item item = lstBattleItems.SelectedItem as Item;
-
-            if (item == null)
+            if (lstBattleItems.SelectedItem is not Item item)
             {
-                MessageBox.Show("Vui lòng chọn một vật phẩm!");
+                AddLog("Vui lòng chọn một vật phẩm.");
                 return;
             }
 
-            // Trường hợp sử dụng Bomb
             if (item.Damage > 0)
+                UseBombItem(item);
+            else
+                UseRecoveryItem(item);
+        }
+
+        private void UseBombItem(Item item)
+        {
+            int damage = itemService.UseBomb(player, enemy, item);
+            if (damage <= 0)
             {
-                int damage = itemService.UseBomb(player, enemy, item);
-
-                if (damage <= 0)
-                {
-                    AddBattleLog("Không thể sử dụng Bomb.");
-                    LoadBattleItemList();
-                    return;
-                }
-
-                grpItemSelection.Visible = false;
-
-                AddBattleLog($"{player.Name} sử dụng {item.Name}, " + $"gây {damage} sát thương!");
-
-                UpdateBattleUI();
-
-                // Nếu Bomb hạ quái, xử lý kết thúc trận chiến
-                if (battleService.IsEnemyDefeated(enemy))
-                {
-                    EnemyDefeated();
-                    return;
-                }
-
-                // Cập nhật số lượng vật phẩm còn lại
+                AddLog($"Không thể sử dụng {item.Name}.");
                 LoadBattleItemList();
-
-                // Quái thực hiện lượt tấn công
-                EnemyTurn();
                 return;
-            }
-
-            // Các vật phẩm hồi HP và MP vẫn dùng logic cũ
-            bool used = itemService.UseItem(player, item);
-
-            if (!used)
-            {
-                AddBattleLog("Không thể sử dụng vật phẩm vì HP và MP đã đầy.");
             }
 
             grpItemSelection.Visible = false;
+            AddLog($"Lượt {currentTurn}: {player.Name} sử dụng {item.Name}, gây {damage} sát thương cho {enemy.Name}.");
+            StrikeEnemy(damage);
+        }
 
-            AddBattleLog($"{player.Name} sử dụng {item.Name}.");
+        private void UseRecoveryItem(Item item)
+        {
+            if (!itemService.UseItem(player, item, out int healedHp, out int restoredMp))
+            {
+                AddLog($"Không thể sử dụng {item.Name}; HP và MP có thể đã đầy.");
+                return;
+            }
 
+            grpItemSelection.Visible = false;
+            AddLog($"Lượt {currentTurn}: {player.Name} sử dụng {item.Name}. Hồi {healedHp} HP, {restoredMp} MP.");
+            if (healedHp > 0)
+                ShowFloatingText($"+{healedHp} HP", picBattlePlayer, HealColor);
+            if (restoredMp > 0)
+                ShowFloatingText($"+{restoredMp} MP", picBattlePlayer, ManaColor);
             UpdateBattleUI();
-
-            // Cập nhật danh sách sau khi tiêu hao vật phẩm
-            LoadBattleItemList();
-
             EnemyTurn();
         }
+
         private void btnCancelItem_Click(object sender, EventArgs e)
         {
             grpItemSelection.Visible = false;
-        }
-        private void EnemyTurn()
-        {
-            int enemyDamage = battleService.EnemyAttack(player,enemy);
-
-            AddBattleLog(
-                $"{enemy.Name} tấn công {player.Name}, " +
-                $"gây {enemyDamage} sát thương!"
-            );
-
-            UpdateBattleUI();
-
-            // Kiểm tra người chơi đã bị đánh bại chưa
-            if (battleService.IsPlayerDefeated(player))
-            {
-                PlayerDefeated();
-            }
+            SetActionButtonsEnabled(true);
         }
 
-
+        #endregion
     }
 }
