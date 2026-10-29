@@ -34,6 +34,8 @@ namespace RPG.Controls
         public event EventHandler HomeRequested;
         public event EventHandler MapExitRequested;
         public event EventHandler ShopRequested;
+        public event EventHandler StatsRequested;
+        public event EventHandler SkillTreeRequested;
         private int playerSpeed = 10;
 
         private bool moveUp;
@@ -156,6 +158,9 @@ namespace RPG.Controls
             LoadPlayerIdleFrames();
 
             UpdatePlayerProgress();
+            // Giữ 2 nút mới nằm trên vật cản và quái
+            btnStats.BringToFront();
+            btnSkillTree.BringToFront();
             gameTimer.Start();
 
         }
@@ -233,6 +238,9 @@ namespace RPG.Controls
             // Hiển thị cấp độ và điểm kỹ năng
             lblPlayerLevel.Text = $"Level: {player.Level}";
             lblSkillPoints.Text = $"Điểm kỹ năng: {player.SkillPoints}";
+            // Hiện số điểm chưa dùng ngay trên nút để người chơi biết mà vào cộng
+            btnStats.Text = $"CHỈ SỐ ({player.StatPoints})";
+            btnSkillTree.Text = $"CÂY KỸ NĂNG ({player.SkillPoints})";
 
             // Cập nhật thanh tiến trình EXP
             int expRequired = Math.Max(1, player.ExperienceToNextLevel
@@ -255,11 +263,51 @@ namespace RPG.Controls
             pnlPlayer.Left = gameState.Player.X;
             pnlPlayer.Top = gameState.Player.Y;
         }
+        private Image LoadEnemySprite(Enemy enemy)
+        {
+            string fileName = enemy.Name?.Trim().ToLowerInvariant() switch
+            {
+                "slime" => "Slime.png",
+                "skeleton" => "Skeleton_Left_Handed.png",
+                "zombie" => "Zombie_Adult.png",
+
+                // Enemy ở DungeonFloor2
+                "demon" => "Demon.png",
+                "yeti" => "Yeti.png",
+                "boss" => "Boss.png",
+
+                // Ảnh mặc định nếu tên enemy không khớp
+                _ => "Zombie_Adult.png"
+            };
+
+            string imagePath = Path.Combine(
+                AppContext.BaseDirectory,
+                "Assets",
+                fileName
+            );
+
+            // Nếu chưa có ảnh, trả về null để dùng màu thay thế
+            if (!File.Exists(imagePath))
+                return null;
+
+            // Tạo bản sao để không khóa file PNG
+            using (Image source = Image.FromFile(imagePath))
+            {
+                return new Bitmap(source);
+            }
+        }
         private void LoadEnemies()
         {
             // Xóa những Panel quái vật được tạo động từ lần tải trước
             foreach (Panel panel in enemyPanels.Values)
             {
+                // Giải phóng ảnh sprite cũ
+                if (panel.BackgroundImage != null)
+                {
+                    panel.BackgroundImage.Dispose();
+                    panel.BackgroundImage = null;
+                }
+
                 if (panel != pnlEnemy1)
                 {
                     Controls.Remove(panel);
@@ -284,32 +332,64 @@ namespace RPG.Controls
 
                 if (i == 0)
                 {
-                    // Quái đầu tiên sử dụng Panel có sẵn trong Designer
+                    // Quái đầu tiên dùng Panel có sẵn trong Designer
                     enemyPanel = pnlEnemy1;
                 }
                 else
                 {
-                    // Các quái tiếp theo được tạo động
+                    // Các quái tiếp theo được tạo riêng
                     enemyPanel = new Panel
                     {
                         Name = $"pnlEnemy_{i + 1}",
-                        Size = pnlEnemy1.Size,
-                        BackColor = pnlEnemy1.BackColor,
-                        BorderStyle = pnlEnemy1.BorderStyle,
-                        BackgroundImage = pnlEnemy1.BackgroundImage,
-                        BackgroundImageLayout = pnlEnemy1.BackgroundImageLayout
+                        Size = pnlEnemy1.Size
                     };
 
                     Controls.Add(enemyPanel);
                 }
 
-                // Đặt quái vật đúng vị trí trong dữ liệu
+                // Đặt vị trí đúng theo dữ liệu Enemy
                 enemyPanel.Left = enemy.X;
                 enemyPanel.Top = enemy.Y;
+
+                // Tải hình ảnh tương ứng với loại quái
+                Image enemyImage = LoadEnemySprite(enemy);
+
+                if (enemyImage != null)
+                {
+                    enemyPanel.BackgroundImage = enemyImage;
+                    enemyPanel.BackgroundImageLayout =
+                        ImageLayout.Zoom;
+
+                    enemyPanel.BackColor = Color.Transparent;
+                    enemyPanel.BorderStyle = BorderStyle.None;
+                }
+                else
+                {
+                    // Hình thay thế khi chưa có sprite
+                    enemyPanel.BackgroundImage = null;
+
+                    if (enemy.Name.IndexOf(
+                        "Slime",
+                        StringComparison.OrdinalIgnoreCase) >= 0)
+                    {
+                        enemyPanel.BackColor = Color.LimeGreen;
+                    }
+                    else
+                    {
+                        enemyPanel.BackColor = Color.Firebrick;
+                    }
+
+                    enemyPanel.BorderStyle = BorderStyle.FixedSingle;
+                }
+
                 enemyPanel.Visible = true;
 
-                // Liên kết dữ liệu quái vật với Panel hiển thị
+                // Liên kết quái với Panel tương ứng
                 enemyPanels.Add(enemy, enemyPanel);
+            }
+            foreach (Panel enemyPanel in enemyPanels.Values)
+            {
+                enemyPanel.BringToFront();
             }
 
             // Đưa người chơi và những thành phần giao diện quan trọng lên phía trước
@@ -575,6 +655,16 @@ namespace RPG.Controls
         {
             gameTimer.Stop();
             HomeRequested?.Invoke(this, EventArgs.Empty);
+        }
+        private void btnStats_Click(object sender, EventArgs e)
+        {
+            gameTimer.Stop();
+            StatsRequested?.Invoke(this, EventArgs.Empty);
+        }
+        private void btnSkillTree_Click(object sender, EventArgs e)
+        {
+            gameTimer.Stop();
+            SkillTreeRequested?.Invoke(this, EventArgs.Empty);
         }
 
 

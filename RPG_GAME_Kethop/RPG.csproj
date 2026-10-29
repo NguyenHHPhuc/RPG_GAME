@@ -25,9 +25,13 @@
 
   <ItemGroup>
     <Content Include="Assets\Steve_Dwarf.png" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="Assets\Zombie_Adult.png" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="Assets\Skeleton_Left_Handed.png" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="Assets\Arrow.png" CopyToOutputDirectory="PreserveNewest" />
+	<Content Include="Assets\Slime.png" CopyToOutputDirectory="PreserveNewest" />
+	<Content Include="Assets\Skeleton_Left_Handed.png" CopyToOutputDirectory="PreserveNewest" />
+	<Content Include="Assets\Zombie_Adult.png" CopyToOutputDirectory="PreserveNewest" />
+	  <Content Include="Assets\Yeti.png" CopyToOutputDirectory="PreserveNewest" />
+	  <Content Include="Assets\Demon.png" CopyToOutputDirectory="PreserveNewest" />
+	  <Content Include="Assets\Boss.png" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

@@ -40,6 +40,8 @@
             lblPlayerEXP = new Label();
             lblSkillPoints = new Label();
             progressPlayerEXP = new ProgressBar();
+            btnStats = new Button();
+            btnSkillTree = new Button();
             SuspendLayout();
             // 
             // lblMapName
@@ -134,11 +136,33 @@
             progressPlayerEXP.Name = "progressPlayerEXP";
             progressPlayerEXP.Size = new Size(146, 14);
             progressPlayerEXP.TabIndex = 11;
-            // 
+            //
+            // btnStats
+            //
+            btnStats.Location = new Point(600, 8);
+            btnStats.Name = "btnStats";
+            btnStats.Size = new Size(110, 26);
+            btnStats.TabIndex = 12;
+            btnStats.Text = "CHỈ SỐ";
+            btnStats.UseVisualStyleBackColor = true;
+            btnStats.Click += btnStats_Click;
+            //
+            // btnSkillTree
+            //
+            btnSkillTree.Location = new Point(720, 8);
+            btnSkillTree.Name = "btnSkillTree";
+            btnSkillTree.Size = new Size(140, 26);
+            btnSkillTree.TabIndex = 13;
+            btnSkillTree.Text = "CÂY KỸ NĂNG";
+            btnSkillTree.UseVisualStyleBackColor = true;
+            btnSkillTree.Click += btnSkillTree_Click;
+            //
             // MapControl
-            // 
+            //
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(btnSkillTree);
+            Controls.Add(btnStats);
             Controls.Add(progressPlayerEXP);
             Controls.Add(lblSkillPoints);
             Controls.Add(lblPlayerEXP);
@@ -168,5 +192,7 @@
         private Label lblPlayerEXP;
         private Label lblSkillPoints;
         private ProgressBar progressPlayerEXP;
+        private Button btnStats;
+        private Button btnSkillTree;
     }
 }
