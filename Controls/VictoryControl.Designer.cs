@@ -34,16 +34,18 @@
             // 
             // lblVictoryTitle
             // 
+            lblVictoryTitle.Anchor = AnchorStyles.None;
             lblVictoryTitle.AutoSize = true;
             lblVictoryTitle.Font = new Font("Segoe UI", 26F);
-            lblVictoryTitle.Location = new Point(312, 179);
+            lblVictoryTitle.Location = new Point(244, 185);
             lblVictoryTitle.Name = "lblVictoryTitle";
-            lblVictoryTitle.Size = new Size(128, 47);
+            lblVictoryTitle.Size = new Size(266, 47);
             lblVictoryTitle.TabIndex = 0;
-            lblVictoryTitle.Text = "Victory";
+            lblVictoryTitle.Text = "CHIẾN THẮNG!!";
             // 
             // btnBackToMenu
             // 
+            btnBackToMenu.Anchor = AnchorStyles.None;
             btnBackToMenu.Location = new Point(333, 335);
             btnBackToMenu.Name = "btnBackToMenu";
             btnBackToMenu.Size = new Size(75, 23);

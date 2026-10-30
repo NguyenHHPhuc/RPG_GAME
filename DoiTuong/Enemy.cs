@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,6 +10,7 @@ namespace RPG.DoiTuong
         public string MapId { get; set; }
         public string Name { get; set; }
         public bool IsBoss { get; set; } = false;
+        public bool IsDead => HP <= 0;
 
         public int Level { get; set; }
         public int GoldReward { get; set; }
