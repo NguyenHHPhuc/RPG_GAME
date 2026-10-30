@@ -4,26 +4,12 @@ using System.Text;
 
 namespace RPG.DoiTuong
 {
-    public class Enemy
+    // Name, Level, HP, sát thương, phòng thủ, X/Y... kế thừa từ Character
+    public class Enemy : Character
     {
         public string Id { get; set; }
         public string MapId { get; set; }
-        public string Name { get; set; }
         public bool IsBoss { get; set; } = false;
-        public bool IsDead => HP <= 0;
-
-        public int Level { get; set; }
         public int GoldReward { get; set; }
-
-        public int HP { get; set; }
-        public int MaxHP { get; set; }
-
-        public int MinDamage { get; set; }
-        public int MaxDamage { get; set; }
-        public int Defense { get; set; }
-
-        public int X { get; set; }
-        public int Y { get; set; }
-
     }
 }

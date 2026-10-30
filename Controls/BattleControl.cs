@@ -66,7 +66,6 @@ namespace RPG.Controls
             btnCancelItem.Click += btnCancelItem_Click;
 
             grpItemSelection.Visible = false;
-            grpSkillSelection.Visible = false; // Skill bar động thay cho panel chọn kỹ năng cũ.
             Controls.Add(pnlSkillBar);
 
             this.gameState = gameState;
@@ -671,18 +670,11 @@ namespace RPG.Controls
 
         private void UseRecoveryItem(Item item)
         {
-            int oldHp = player.HP;
-            int oldMp = player.MP;
-
-            // Dùng API ItemService hiện có trong project đã tích hợp.
-            if (!itemService.UseItem(player, item))
+            if (!itemService.UseItem(player, item, out int healedHp, out int restoredMp))
             {
                 AddLog($"Không thể sử dụng {item.Name}; HP và MP có thể đã đầy.");
                 return;
             }
-
-            int healedHp = player.HP - oldHp;
-            int restoredMp = player.MP - oldMp;
 
             grpItemSelection.Visible = false;
             AddLog($"Lượt {currentTurn}: {player.Name} sử dụng {item.Name}. Hồi {healedHp} HP, {restoredMp} MP.");

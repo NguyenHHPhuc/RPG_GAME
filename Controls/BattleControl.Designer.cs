@@ -63,11 +63,6 @@
             pnlPlayerXP = new Panel();
             pnlPlayerXPFill = new Panel();
             lblPlayerXP = new Label();
-            grpSkillSelection = new GroupBox();
-            lstSkills = new ListBox();
-            lblSkillInfo = new Label();
-            btnUseSelectedSkill = new Button();
-            btnCancelSkill = new Button();
             grpItemSelection = new GroupBox();
             lstBattleItems = new ListBox();
             lblBattleItemInfo = new Label();
@@ -80,7 +75,6 @@
             ((System.ComponentModel.ISupportInitialize)picBattlePlayer).BeginInit();
             ((System.ComponentModel.ISupportInitialize)picBattleEnemy).BeginInit();
             pnlPlayerXP.SuspendLayout();
-            grpSkillSelection.SuspendLayout();
             grpItemSelection.SuspendLayout();
             SuspendLayout();
             // 
@@ -331,60 +325,6 @@
             lblPlayerXP.TabIndex = 16;
             lblPlayerXP.Text = "Kinh nghiệm: 0 / 100";
             // 
-            // grpSkillSelection
-            // 
-            grpSkillSelection.Anchor = AnchorStyles.None;
-            grpSkillSelection.Controls.Add(lstSkills);
-            grpSkillSelection.Controls.Add(lblSkillInfo);
-            grpSkillSelection.Controls.Add(btnUseSelectedSkill);
-            grpSkillSelection.Controls.Add(btnCancelSkill);
-            grpSkillSelection.Location = new Point(366, 313);
-            grpSkillSelection.Margin = new Padding(3, 4, 3, 4);
-            grpSkillSelection.Name = "grpSkillSelection";
-            grpSkillSelection.Padding = new Padding(3, 4, 3, 4);
-            grpSkillSelection.Size = new Size(411, 373);
-            grpSkillSelection.TabIndex = 17;
-            grpSkillSelection.TabStop = false;
-            grpSkillSelection.Text = "Chọn kỹ năng";
-            grpSkillSelection.Visible = false;
-            // 
-            // lstSkills
-            // 
-            lstSkills.FormattingEnabled = true;
-            lstSkills.Location = new Point(18, 40);
-            lstSkills.Margin = new Padding(3, 4, 3, 4);
-            lstSkills.Name = "lstSkills";
-            lstSkills.Size = new Size(165, 204);
-            lstSkills.TabIndex = 0;
-            // 
-            // lblSkillInfo
-            // 
-            lblSkillInfo.Location = new Point(200, 40);
-            lblSkillInfo.Name = "lblSkillInfo";
-            lblSkillInfo.Size = new Size(192, 219);
-            lblSkillInfo.TabIndex = 1;
-            lblSkillInfo.Text = "Chọn một kỹ năng.";
-            // 
-            // btnUseSelectedSkill
-            // 
-            btnUseSelectedSkill.Location = new Point(51, 293);
-            btnUseSelectedSkill.Margin = new Padding(3, 4, 3, 4);
-            btnUseSelectedSkill.Name = "btnUseSelectedSkill";
-            btnUseSelectedSkill.Size = new Size(137, 47);
-            btnUseSelectedSkill.TabIndex = 2;
-            btnUseSelectedSkill.Text = "Sử dụng";
-            btnUseSelectedSkill.UseVisualStyleBackColor = true;
-            // 
-            // btnCancelSkill
-            // 
-            btnCancelSkill.Location = new Point(217, 293);
-            btnCancelSkill.Margin = new Padding(3, 4, 3, 4);
-            btnCancelSkill.Name = "btnCancelSkill";
-            btnCancelSkill.Size = new Size(137, 47);
-            btnCancelSkill.TabIndex = 3;
-            btnCancelSkill.Text = "Hủy";
-            btnCancelSkill.UseVisualStyleBackColor = true;
-            // 
             // grpItemSelection
             // 
             grpItemSelection.Anchor = AnchorStyles.None;
@@ -460,7 +400,6 @@
             Controls.Add(lstBattleLog);
             Controls.Add(lblBattleLogTitle);
             Controls.Add(btnContinue);
-            Controls.Add(grpSkillSelection);
             Controls.Add(grpItemSelection);
             Margin = new Padding(3, 4, 3, 4);
             Name = "BattleControl";
@@ -472,7 +411,6 @@
             ((System.ComponentModel.ISupportInitialize)picBattlePlayer).EndInit();
             ((System.ComponentModel.ISupportInitialize)picBattleEnemy).EndInit();
             pnlPlayerXP.ResumeLayout(false);
-            grpSkillSelection.ResumeLayout(false);
             grpItemSelection.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
@@ -503,11 +441,6 @@
         private Panel pnlPlayerXP;
         private Panel pnlPlayerXPFill;
         private Label lblPlayerXP;
-        private GroupBox grpSkillSelection;
-        private ListBox lstSkills;
-        private Label lblSkillInfo;
-        private Button btnUseSelectedSkill;
-        private Button btnCancelSkill;
         private GroupBox grpItemSelection;
         private ListBox lstBattleItems;
         private Label lblBattleItemInfo;
