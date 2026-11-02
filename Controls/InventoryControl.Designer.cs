@@ -45,11 +45,11 @@
             // 
             lblTitle.AutoSize = true;
             lblTitle.Font = new Font("Segoe UI", 15F);
-            lblTitle.Location = new Point(505, 76);
+            lblTitle.Location = new Point(540, 73);
             lblTitle.Name = "lblTitle";
-            lblTitle.Size = new Size(116, 28);
+            lblTitle.Size = new Size(87, 28);
             lblTitle.TabIndex = 0;
-            lblTitle.Text = "INVENTORY";
+            lblTitle.Text = "KHO ĐỒ";
             // 
             // lstItems
             // 
@@ -66,17 +66,17 @@
             btnUse.Name = "btnUse";
             btnUse.Size = new Size(75, 23);
             btnUse.TabIndex = 2;
-            btnUse.Text = "USE";
+            btnUse.Text = "Dùng";
             btnUse.UseVisualStyleBackColor = true;
             btnUse.Click += btnUse_Click;
             // 
             // btnClose
             // 
-            btnClose.Location = new Point(416, 355);
+            btnClose.Location = new Point(408, 445);
             btnClose.Name = "btnClose";
             btnClose.Size = new Size(75, 23);
             btnClose.TabIndex = 3;
-            btnClose.Text = "CLOSE";
+            btnClose.Text = "Đóng";
             btnClose.UseVisualStyleBackColor = true;
             btnClose.Click += btnClose_Click;
             // 
@@ -91,7 +91,7 @@
             // 
             // btnEquip
             // 
-            btnEquip.Location = new Point(268, 408);
+            btnEquip.Location = new Point(408, 355);
             btnEquip.Name = "btnEquip";
             btnEquip.Size = new Size(75, 23);
             btnEquip.TabIndex = 5;
@@ -101,7 +101,7 @@
             // 
             // btnUnequip
             // 
-            btnUnequip.Location = new Point(414, 408);
+            btnUnequip.Location = new Point(540, 355);
             btnUnequip.Name = "btnUnequip";
             btnUnequip.Size = new Size(75, 23);
             btnUnequip.TabIndex = 6;

@@ -23,4 +23,30 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="Assets\Steve_Dwarf.png" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Assets\Arrow.png" CopyToOutputDirectory="PreserveNewest" />
+	<Content Include="Assets\Slime.png" CopyToOutputDirectory="PreserveNewest" />
+	<Content Include="Assets\Skeleton_Left_Handed.png" CopyToOutputDirectory="PreserveNewest" />
+	<Content Include="Assets\Zombie_Adult.png" CopyToOutputDirectory="PreserveNewest" />
+	  <Content Include="Assets\Yeti.png" CopyToOutputDirectory="PreserveNewest" />
+	  <Content Include="Assets\Demon.png" CopyToOutputDirectory="PreserveNewest" />
+	  <Content Include="Assets\Boss.png" CopyToOutputDirectory="PreserveNewest" />
+	  <Content Include="Assets\StartArea_BG.png" CopyToOutputDirectory="PreserveNewest" />
+	  <Content Include="Assets\DungeonFloor1_BG.png" CopyToOutputDirectory="PreserveNewest" />
+	  <Content Include="Assets\DungeonFloor2_BG.png" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.14">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.14">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
 </Project>

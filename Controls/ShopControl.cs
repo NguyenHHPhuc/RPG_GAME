@@ -19,7 +19,7 @@ namespace RPG.Controls
             new Item
             {
                 Id = "ITEM_HEALTH_POTION",
-                Name = "Health Potion",
+                Name = "Bình Máu",
                 Description = "Hồi phục 50 HP.",
                 Price = 25,
                 HealAmount = 50,
@@ -29,7 +29,7 @@ namespace RPG.Controls
             new Item
             {
                 Id = "ITEM_MANA_POTION",
-                Name = "Mana Potion",
+                Name = "Bình Mana",
                 Description = "Hồi phục 30 MP.",
                 Price = 25,
                 HealAmount = 0,
@@ -39,7 +39,7 @@ namespace RPG.Controls
             new Item
             {
                 Id = "ITEM_LARGE_HEALTH_POTION",
-                Name = "Large Health Potion",
+                Name = "Bình Máu Lớn",
                 Description = "Hồi phục 80 HP.",
                 Price = 50,
                 HealAmount = 80,
@@ -49,7 +49,7 @@ namespace RPG.Controls
             new Item
             {
                 Id = "ITEM_LARGE_MANA_POTION",
-                Name = "Large Mana Potion",
+                Name = "Bình Mana Lớn",
                 Description = "Hồi phục 50 MP.",
                 Price = 50,
                 HealAmount = 0,
@@ -80,46 +80,46 @@ namespace RPG.Controls
             new Item
             {
                 Id = "ITEM_WOODEN_SWORD",
-                Name = "Wooden Sword",
+                Name = "Kiếm Gỗ",
                 Description = "Kiếm gỗ dành cho người mới bắt đầu.",
                 Price = 60,
                 Quantity = 0,
                 Slot = EquipSlot.Weapon,
-                MinDamageBonus = 2,
-                MaxDamageBonus = 3
+                MinDamageBonus = 5,
+                MaxDamageBonus = 10
             },
             new Item
             {
                 Id = "ITEM_IRON_SWORD",
-                Name = "Iron Sword",
+                Name = "Kiếm Sắt",
                 Description = "Kiếm sắt có sát thương cao hơn.",
                 Price = 120,
                 Quantity = 0,
                 Slot = EquipSlot.Weapon,
-                MinDamageBonus = 5,
-                MaxDamageBonus = 8
+                MinDamageBonus = 15,
+                MaxDamageBonus = 30
             },
 
             // ===== ARMOR =====
             new Item
             {
                 Id = "ITEM_LEATHER_ARMOR",
-                Name = "Leather Armor",
+                Name = "Áo Giáp Da",
                 Description = "Áo giáp da giúp tăng phòng thủ.",
                 Price = 70,
                 Quantity = 0,
                 Slot = EquipSlot.Armor,
-                DefenseBonus = 3
+                DefenseBonus = 6
             },
             new Item
             {
                 Id = "ITEM_IRON_ARMOR",
-                Name = "Iron Armor",
+                Name = "Áo Giáp Sắt",
                 Description = "Áo giáp sắt có khả năng phòng thủ cao.",
                 Price = 140,
                 Quantity = 0,
                 Slot = EquipSlot.Armor,
-                DefenseBonus = 7
+                DefenseBonus = 15
             }
 
         };

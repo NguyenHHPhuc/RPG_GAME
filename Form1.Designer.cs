@@ -28,58 +28,34 @@
         /// </summary>
         private void InitializeComponent()
         {
-            lblGameName = new Label();
-            btnPlay = new Button();
             panelMain = new Panel();
             SuspendLayout();
-            // 
-            // lblGameName
-            // 
-            lblGameName.AutoSize = true;
-            lblGameName.Font = new Font("Segoe UI", 16F);
-            lblGameName.Location = new Point(299, 50);
-            lblGameName.Name = "lblGameName";
-            lblGameName.Size = new Size(140, 30);
-            lblGameName.TabIndex = 0;
-            lblGameName.Text = "GAME NAME";
-            // 
-            // btnPlay
-            // 
-            btnPlay.Location = new Point(329, 251);
-            btnPlay.Name = "btnPlay";
-            btnPlay.Size = new Size(75, 23);
-            btnPlay.TabIndex = 1;
-            btnPlay.Text = "PLAY";
-            btnPlay.UseVisualStyleBackColor = true;
             // 
             // panelMain
             // 
             panelMain.Dock = DockStyle.Fill;
             panelMain.Location = new Point(0, 0);
             panelMain.Name = "panelMain";
-            panelMain.Size = new Size(1264, 681);
+            panelMain.Size = new Size(1484, 861);
             panelMain.TabIndex = 2;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1264, 681);
+            ClientSize = new Size(1484, 861);
             Controls.Add(panelMain);
-            Controls.Add(btnPlay);
-            Controls.Add(lblGameName);
-            MinimumSize = new Size(1000, 650);
+            FormBorderStyle = FormBorderStyle.FixedSingle;
+            MaximizeBox = false;
+            MinimumSize = new Size(1000, 648);
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Form1";
+            Text = "RPG Game";
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
 
-        private Label lblGameName;
-        private Button btnPlay;
         private Panel panelMain;
     }
 }
