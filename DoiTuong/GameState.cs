@@ -44,8 +44,8 @@ namespace RPG.DoiTuong
                     MaxHP = 100,
                     MP = 50,
                     MaxMP = 50,
-                    MinDamage = 90,
-                    MaxDamage = 150,
+                    MinDamage = 20,
+                    MaxDamage = 50,
                     Defense = 10,
                     X = 170, //145, 135
                     Y = 200, 

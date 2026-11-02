@@ -80,7 +80,7 @@ namespace RPG.Controls
             new Item
             {
                 Id = "ITEM_WOODEN_SWORD",
-                Name = "Wooden Sword",
+                Name = "Kiếm Gỗ",
                 Description = "Kiếm gỗ dành cho người mới bắt đầu.",
                 Price = 60,
                 Quantity = 0,
@@ -91,7 +91,7 @@ namespace RPG.Controls
             new Item
             {
                 Id = "ITEM_IRON_SWORD",
-                Name = "Iron Sword",
+                Name = "Kiem Sắt",
                 Description = "Kiếm sắt có sát thương cao hơn.",
                 Price = 120,
                 Quantity = 0,
@@ -104,7 +104,7 @@ namespace RPG.Controls
             new Item
             {
                 Id = "ITEM_LEATHER_ARMOR",
-                Name = "Leather Armor",
+                Name = "Áo Giáp Da",
                 Description = "Áo giáp da giúp tăng phòng thủ.",
                 Price = 70,
                 Quantity = 0,
@@ -114,7 +114,7 @@ namespace RPG.Controls
             new Item
             {
                 Id = "ITEM_IRON_ARMOR",
-                Name = "Iron Armor",
+                Name = "Áo Giáp Sắt",
                 Description = "Áo giáp sắt có khả năng phòng thủ cao.",
                 Price = 140,
                 Quantity = 0,

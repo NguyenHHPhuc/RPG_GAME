@@ -57,7 +57,7 @@ namespace RPG.Controls
         private readonly Dictionary<Enemy, Panel> enemyPanels = new Dictionary<Enemy, Panel>();
         private readonly List<Panel> obstaclePanels = new List<Panel>();
 
-        private const bool ShowObstacleDebug = true; // Hiển thị các vật cản (tường) để debug
+        private const bool ShowObstacleDebug = false; // Hiển thị các vật cản (tường) để debug
         public event EventHandler BattleRequested;
         public event EventHandler InventoryRequested;
         public event EventHandler HomeRequested;

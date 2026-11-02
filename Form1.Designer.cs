@@ -50,7 +50,7 @@
             MinimumSize = new Size(1000, 648);
             Name = "Form1";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Form1";
+            Text = "RPG Game";
             ResumeLayout(false);
         }
 

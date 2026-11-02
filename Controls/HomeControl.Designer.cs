@@ -92,7 +92,7 @@
             btnStartAdventure.Name = "btnStartAdventure";
             btnStartAdventure.Size = new Size(75, 23);
             btnStartAdventure.TabIndex = 5;
-            btnStartAdventure.Text = "Resume";
+            btnStartAdventure.Text = "Tiếp Tục";
             btnStartAdventure.UseVisualStyleBackColor = true;
             btnStartAdventure.Click += btnStartAdventure_Click;
             // 
@@ -102,7 +102,7 @@
             btnInventory.Name = "btnInventory";
             btnInventory.Size = new Size(75, 23);
             btnInventory.TabIndex = 6;
-            btnInventory.Text = "Inventory";
+            btnInventory.Text = " Kho Đồ";
             btnInventory.UseVisualStyleBackColor = true;
             btnInventory.Click += btnInventory_Click;
             // 
@@ -112,7 +112,7 @@
             btnExitHome.Name = "btnExitHome";
             btnExitHome.Size = new Size(75, 23);
             btnExitHome.TabIndex = 7;
-            btnExitHome.Text = "Exit";
+            btnExitHome.Text = "Menu";
             btnExitHome.UseVisualStyleBackColor = true;
             btnExitHome.Click += btnExitHome_Click;
             // 
