@@ -206,7 +206,7 @@ namespace RPG.Services
                 },
                 ExitVerticalRatio = 0.5f,
                 NextMapId = "DungeonFloor1",
-                EntryX = 530,
+                EntryX = 590,
                 EntryY = 60
             },
             new MapData
