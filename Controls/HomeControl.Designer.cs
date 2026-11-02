@@ -42,6 +42,7 @@
             // 
             // lblTitle
             // 
+            lblTitle.Anchor = AnchorStyles.None;
             lblTitle.AutoSize = true;
             lblTitle.Font = new Font("Segoe UI", 22F);
             lblTitle.Location = new Point(330, 46);
@@ -52,6 +53,7 @@
             // 
             // lblPlayerName
             // 
+            lblPlayerName.Anchor = AnchorStyles.None;
             lblPlayerName.AutoSize = true;
             lblPlayerName.Location = new Point(176, 133);
             lblPlayerName.Name = "lblPlayerName";
@@ -61,6 +63,7 @@
             // 
             // lblPlayerLevel
             // 
+            lblPlayerLevel.Anchor = AnchorStyles.None;
             lblPlayerLevel.AutoSize = true;
             lblPlayerLevel.Location = new Point(330, 178);
             lblPlayerLevel.Name = "lblPlayerLevel";
@@ -70,6 +73,7 @@
             // 
             // lblPlayerHP
             // 
+            lblPlayerHP.Anchor = AnchorStyles.None;
             lblPlayerHP.AutoSize = true;
             lblPlayerHP.Location = new Point(176, 227);
             lblPlayerHP.Name = "lblPlayerHP";
@@ -79,6 +83,7 @@
             // 
             // lblPlayerMP
             // 
+            lblPlayerMP.Anchor = AnchorStyles.None;
             lblPlayerMP.AutoSize = true;
             lblPlayerMP.Location = new Point(176, 274);
             lblPlayerMP.Name = "lblPlayerMP";
@@ -88,6 +93,7 @@
             // 
             // btnStartAdventure
             // 
+            btnStartAdventure.Anchor = AnchorStyles.None;
             btnStartAdventure.Location = new Point(489, 133);
             btnStartAdventure.Name = "btnStartAdventure";
             btnStartAdventure.Size = new Size(75, 23);
@@ -98,6 +104,7 @@
             // 
             // btnInventory
             // 
+            btnInventory.Anchor = AnchorStyles.None;
             btnInventory.Location = new Point(489, 188);
             btnInventory.Name = "btnInventory";
             btnInventory.Size = new Size(75, 23);
@@ -108,6 +115,7 @@
             // 
             // btnExitHome
             // 
+            btnExitHome.Anchor = AnchorStyles.None;
             btnExitHome.Location = new Point(489, 245);
             btnExitHome.Name = "btnExitHome";
             btnExitHome.Size = new Size(75, 23);
@@ -118,6 +126,7 @@
             // 
             // lblPlayerEXP
             // 
+            lblPlayerEXP.Anchor = AnchorStyles.None;
             lblPlayerEXP.AutoSize = true;
             lblPlayerEXP.Location = new Point(176, 178);
             lblPlayerEXP.Name = "lblPlayerEXP";
@@ -127,6 +136,7 @@
             // 
             // lblPlayerGold
             // 
+            lblPlayerGold.Anchor = AnchorStyles.None;
             lblPlayerGold.AutoSize = true;
             lblPlayerGold.Location = new Point(237, 338);
             lblPlayerGold.Name = "lblPlayerGold";
